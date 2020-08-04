@@ -20,22 +20,28 @@ jobs:
     - name: Generate SDK using Open API Generator Custom Docker image
       run: docker run --rm -v "${GITHUB_WORKSPACE}:/local" arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec /local/openapi-schema.json --output /local/dotnet/GeneratedSDK --config /local/dotnet/openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir /local/dotnet/Templates --skip-validate-spec
 
+    - name: Build Docker image
+      run: docker build -t analyticsapi-engines-sdk-generator -f ./dotnet/Dockerfile .
+    
+    # - name: Run Docker image to build Generated SDK, Tests and Examples
+    #   run: docker run --rm -v "${GITHUB_WORKSPACE}:/local" arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec /local/openapi-schema.json --output /local/dotnet/GeneratedSDK --config /local/dotnet/openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir /local/dotnet/Templates --skip-validate-spec
+
     # - name: Setup .NET Core
     #   uses: actions/setup-dotnet@v1
     #   with:
     #     dotnet-version: 2.2
     
-    - name: Pull dotnet docker image
-      # run: cd ${GITHUB_WORKSPACE}/GeneratedSDK && dotnet restore && dotnet build --configuration Release --no-restore
-      run: docker pull mcr.microsoft.com/dotnet/core/sdk:2.2
+    # - name: Pull dotnet docker image
+    #   # run: cd ${GITHUB_WORKSPACE}/GeneratedSDK && dotnet restore && dotnet build --configuration Release --no-restore
+    #   run: docker pull mcr.microsoft.com/dotnet/core/sdk:2.2
 
-    - name: Install dependencies and build Generated SDK
-      # run: cd ${GITHUB_WORKSPACE}/GeneratedSDK && dotnet restore && dotnet build --configuration Release --no-restore
-      run: docker run --rm -v ${GITHUB_WORKSPACE}/dotnet/GeneratedSDK:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet restore && docker run --rm -v ${GITHUB_WORKSPACE}/dotnet/GeneratedSDK:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release --no-restore
+    # - name: Install dependencies and build Generated SDK
+    #   # run: cd ${GITHUB_WORKSPACE}/GeneratedSDK && dotnet restore && dotnet build --configuration Release --no-restore
+    #   run: docker run --rm -v ${GITHUB_WORKSPACE}/dotnet/GeneratedSDK:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet restore && docker run --rm -v ${GITHUB_WORKSPACE}/dotnet/GeneratedSDK:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release --no-restore
         
-    - name: Install dependencies and build Tests
-      # run: cd ${GITHUB_WORKSPACE}/Tests && dotnet restore && dotnet build --configuration Release --no-restore
-      run: docker run --rm -v ${GITHUB_WORKSPACE}/dotnet/Tests:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release --no-restore
+    # - name: Install dependencies and build Tests
+    #   # run: cd ${GITHUB_WORKSPACE}/Tests && dotnet restore && dotnet build --configuration Release --no-restore
+    #   run: docker run --rm -v ${GITHUB_WORKSPACE}/dotnet/Tests:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release --no-restore
 
     # - name: Run Tests
     #   run: cd ${GITHUB_WORKSPACE}/Tests && dotnet test --no-restore --verbosity normal
