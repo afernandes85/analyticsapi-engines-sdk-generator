@@ -22,8 +22,8 @@ RUN dotnet build --configuration Release
 
 WORKDIR /dotnet/Tests
 
-RUN dotnet build --configuration Release
+RUN dotnet restore && dotnet build --configuration Release --no-restore
 
 WORKDIR /dotnet/Examples
 
-RUN dotnet build --configuration Release
+RUN dotnet restore && dotnet build --configuration Release --no-restore
