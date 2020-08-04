@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Generate SDK using Open API Generator Custom Docker image
-      run: docker run --rm -v "${GITHUB_WORKSPACE}/dotnet:/local" -w /local arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec openapi-schema.json --output GeneratedSDK --config openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir Templates --skip-validate-spec
+      run: docker run --rm -v "${GITHUB_WORKSPACE}:/local" arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec /local/openapi-schema.json --output /local/dotnet/GeneratedSDK --config /local/dotnet/openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir /local/dotnet/Templates --skip-validate-spec
 
     # - name: Setup .NET Core
     #   uses: actions/setup-dotnet@v1
