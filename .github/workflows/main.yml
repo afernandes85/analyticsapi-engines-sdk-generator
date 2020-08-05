@@ -36,14 +36,7 @@ jobs:
         run: |
           docker run --rm -v "analyticsapi-engines-sdk-generator:/generator" \
             -v "analyticsapi-engines-dotnet-sdk:/sdk" \
-            arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
-            --generator-name CustomCSharpNetCoreClientCodegen \
-            --input-spec /generator/openapi-schema.json \
-            --output /sdk/Engines \
-            --config /generator/dotnet/openapi-generator-config.json \ 
-            --http-user-agent engines-api/3.0.0/csharp \
-            --template-dir /generator/dotnet/templates \
-            --skip-validate-spec
+            arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec /generator/openapi-schema.json --output /sdk/Engines --config /generator/dotnet/openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir /generator/dotnet/templates --skip-validate-spec
 
       # - name: Build Docker image
       #   run: docker build -t analyticsapi-engines-sdk-generator -f ${GITHUB_WORKSPACE}/dotnet/build.dockerfile .
