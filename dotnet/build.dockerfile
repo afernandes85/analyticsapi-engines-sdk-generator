@@ -22,8 +22,8 @@ RUN dotnet build --configuration Release
 
 WORKDIR /dotnet/Tests
 
-RUN dotnet restore && dotnet build --configuration Release --no-restore
+RUN dotnet test --verbosity normal
 
 WORKDIR /dotnet/Examples
 
-RUN dotnet restore && dotnet build --configuration Release --no-restore
+RUN dotnet build --configuration Release
