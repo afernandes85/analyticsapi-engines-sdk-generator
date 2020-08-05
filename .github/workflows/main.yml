@@ -23,7 +23,7 @@ jobs:
         with:
           repository: afernandes85/analyticsapi-engines-dotnet-sdk
           path: analyticsapi-engines-dotnet-sdk
-          # token: ${{ secrets.USER_API_KEY }}
+          fetch-depth: 0
 
       - name: Check out Analytics API SDK Generator
         uses: actions/checkout@v2
@@ -62,4 +62,4 @@ jobs:
       #   run: cd ${GITHUB_WORKSPACE}/Tests && dotnet test --no-restore --verbosity normal
 
       - name: List files in directory
-        run: ls -l
+        run: cd analyticsapi-engines-dotnet-sdk && ls -l
