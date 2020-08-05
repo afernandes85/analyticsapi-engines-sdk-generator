@@ -52,6 +52,9 @@ jobs:
         run: |
           cd analyticsapi-engines-dotnet-sdk
           
+          git config user.email "${{ secrets.USER_EMAIL }}"
+          git config user.name "${{ secrets.USER }}"
+
           branch_name="feat/sdk/updating-`date +%s`" 
           git checkout -b $branch_name
           git status
