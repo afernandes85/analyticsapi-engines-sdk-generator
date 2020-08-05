@@ -65,6 +65,8 @@ jobs:
           git push origin $branch_name
           echo "Pushed all the changes to remote location"
           
+          export GITHUB_USER=${{ secrets.USER }}
+          export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
           hub pull-request -m ""feat(sdk): Updating SDK" -h $branch_name
       # - name: Build Docker image
       #   run: docker build -t analyticsapi-engines-sdk-generator -f ${GITHUB_WORKSPACE}/dotnet/build.dockerfile .
