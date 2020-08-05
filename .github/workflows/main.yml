@@ -32,9 +32,9 @@ jobs:
           path: analyticsapi-engines-sdk-generator
           fetch-depth: 0
 
-      - name: Generate new SDK using Open API Generator Custom Docker image
-        run: |
-          docker run --rm -v ${GITHUB_WORKSPACE}:/local arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec /local/analyticsapi-engines-sdk-generator/openapi-schema.json --output /local/analyticsapi-engines-dotnet-sdk/Engines --config /local/analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir /local/analyticsapi-engines-sdk-generator/dotnet/templates --skip-validate-spec
+      # - name: Generate new SDK using Open API Generator Custom Docker image
+      #   run: |
+      #     docker run --rm -v ${GITHUB_WORKSPACE}:/local arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec /local/analyticsapi-engines-sdk-generator/openapi-schema.json --output /local/analyticsapi-engines-dotnet-sdk/Engines --config /local/analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir /local/analyticsapi-engines-sdk-generator/dotnet/templates --skip-validate-spec
 
       # - name: Build Docker image
       #   run: docker build -t analyticsapi-engines-sdk-generator -f ${GITHUB_WORKSPACE}/dotnet/build.dockerfile .
@@ -63,4 +63,7 @@ jobs:
       #   run: cd ${GITHUB_WORKSPACE}/Tests && dotnet test --no-restore --verbosity normal
 
       - name: List files in directory
-        run: cd analyticsapi-engines-dotnet-sdk && ls -l
+        run: cd analyticsapi-engines-sdk-generator && ls -l
+
+      - name: List files in directory
+        run: cd ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator && ls -l
