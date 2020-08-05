@@ -47,7 +47,22 @@ jobs:
 
       - name: Build new SDK
         run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
-            
+      
+      - name: Raise pull request
+        run: |
+          cd analyticsapi-engines-dotnet-sdk
+          
+          branch_name="feat/sdk/updating-`date +%s`" 
+          git checkout -b $branch_name
+          git status
+          git add -A .
+          git commit -m "feat(sdk): Updating SDK"
+          echo "Committed all the changes"
+          
+          git push origin $branch_name
+          echo "Pushed all the changes to remote location"
+          
+          hub pull-request -m ""feat(sdk): Updating SDK" -h $branch_name
       # - name: Build Docker image
       #   run: docker build -t analyticsapi-engines-sdk-generator -f ${GITHUB_WORKSPACE}/dotnet/build.dockerfile .
     
