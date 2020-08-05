@@ -45,6 +45,9 @@ jobs:
           --template-dir /generator/dotnet/templates \
           --skip-validate-spec
 
+      - name: Build new SDK
+        run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
+            
       # - name: Build Docker image
       #   run: docker build -t analyticsapi-engines-sdk-generator -f ${GITHUB_WORKSPACE}/dotnet/build.dockerfile .
     
@@ -71,8 +74,8 @@ jobs:
       # - name: Run Tests
       #   run: cd ${GITHUB_WORKSPACE}/Tests && dotnet test --no-restore --verbosity normal
 
-      - name: List files in directory
-        run: cd analyticsapi-engines-dotnet-sdk/Engines && ls -l
+      # - name: List files in directory
+      #   run: cd analyticsapi-engines-dotnet-sdk/Engines && ls -l
 
       # - name: List files in directory
       #   run: cd ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator && ls -l
