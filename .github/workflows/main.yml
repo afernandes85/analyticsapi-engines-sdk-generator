@@ -63,7 +63,7 @@ jobs:
       #   run: cd ${GITHUB_WORKSPACE}/Tests && dotnet test --no-restore --verbosity normal
 
       - name: List files in directory
-        run: cd analyticsapi-engines-sdk-generator && ls -l
+        run: cd analyticsapi-engines-sdk-generator/dotnet/templates && ls -l
 
-      - name: List files in directory
-        run: cd ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator && ls -l
+      # - name: List files in directory
+      #   run: cd ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator && ls -l
