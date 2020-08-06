@@ -49,15 +49,9 @@ jobs:
       - name: Build new SDK
         run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
       
-      - name: Get the version
-        id: vars
-        run: echo ::set-output name=version::$(<./Engines/.openapi-generator/VERSION)
-
       - name: Raise pull request
         run: |
           cd analyticsapi-engines-dotnet-sdk
-
-          ls -l
 
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
@@ -135,17 +129,31 @@ jobs:
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
 
-          branch_name="feat/sdk/updating-`date +%s`" 
-          git checkout -b $branch_name
-          git status
-          git add -A .
-          git commit -m "feat(sdk): Updating SDK"
-          echo "Committed all the changes"
+          version=$(<Engines/.openapi-generator/VERSION)
+          branch_name="feat/sdk/v$version"
           
-          git push origin $branch_name
-          echo "Pushed all the changes to remote location"
-          
-          export GITHUB_USER=${{ secrets.USER }}
-          export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-          hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+          if [ `git branch --list $branch_name` ]
+          then
+            git checkout $branch_name
+            git status
+            git add -A .
+            git commit -m "feat(sdk): v$version"
+            echo "Committed all the changes"
+            
+            git push origin $branch_name
+            echo "Pushed all the changes to remote location"
+          else
+            git checkout -b $branch_name
+            git status
+            git add -A .
+            git commit -m "feat(sdk): v$version"
+            echo "Committed all the changes"
+            
+            git push origin $branch_name
+            echo "Pushed all the changes to remote location"
+            
+            export GITHUB_USER=${{ secrets.USER }}
+            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
+            hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+          fi
 
