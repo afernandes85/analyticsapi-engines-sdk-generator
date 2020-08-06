@@ -42,7 +42,6 @@ jobs:
           --input-spec /generator/openapi-schema.json \
           --output /sdk/Engines \
           --config /generator/dotnet/openapi-generator-config.json \
-          --http-user-agent engines-api/3.0.0/csharp \
           --template-dir /generator/dotnet/templates \
           --skip-validate-spec
 
@@ -51,12 +50,13 @@ jobs:
       
       - name: Raise pull request
         run: |
+          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json | cut -c20-24)
+          
           cd analyticsapi-engines-dotnet-sdk
 
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
 
-          version=$(<Engines/.openapi-generator/VERSION)
           branch_name="feat/sdk/v$version"
           
           if [ `git branch --list $branch_name` ]
@@ -115,7 +115,6 @@ jobs:
           --input-spec /generator/openapi-schema.json \
           --output /sdk/engines \
           --config /generator/python/openapi-generator-config.json \
-          --http-user-agent engines-api/3.0.0/python \
           --template-dir /generator/python/templates \
           --skip-validate-spec
 
@@ -124,12 +123,13 @@ jobs:
       
       - name: Raise pull request
         run: |
+          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/python/openapi-generator-config.json | cut -c20-24)
+          
           cd analyticsapi-engines-python-sdk
           
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
 
-          version=$(<Engines/.openapi-generator/VERSION)
           branch_name="feat/sdk/v$version"
           
           if [ `git branch --list $branch_name` ]
