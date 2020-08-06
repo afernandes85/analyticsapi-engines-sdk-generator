@@ -57,9 +57,9 @@ jobs:
             echo "branch exists"
             git checkout $branch_name
             git pull
-            git status
             rm -r Engines
             cp -r ../analyticsapi-engines-sdk-generator/sdk Engines
+            git status
             git add -A .
             git commit -m "feat(sdk): v$version"
             echo "Committed all the changes"
@@ -69,9 +69,10 @@ jobs:
           else
             echo "new branch"
             git checkout -b $branch_name
-            git status
+            git pull
             rm -r Engines
             cp -r ../analyticsapi-engines-sdk-generator/sdk Engines
+            git status
             git add -A .
             git commit -m "feat(sdk): v$version"
             echo "Committed all the changes"
@@ -136,9 +137,9 @@ jobs:
             echo "branch exists"
             git checkout $branch_name
             git pull
-            git status
             rm -r fds.analyticsapi.engines
             cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines 
+            git status
             git add -A .
             git commit -m "feat(sdk): v$version"
             echo "Committed all the changes"
@@ -148,9 +149,10 @@ jobs:
           else
             echo "new branch"
             git checkout -b $branch_name
-            git status
+            git pull
             rm -r fds.analyticsapi.engines
             cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines
+            git status
             git add -A .
             git commit -m "feat(sdk): v$version"
             echo "Committed all the changes"
