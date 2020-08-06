@@ -49,12 +49,12 @@ jobs:
 
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
+          
+          git fetch
+          git branch --list
 
           branch_name="feat/sdk/v$version"
           
-          git pull
-          git branch --list
-
           if [ `git branch --list $branch_name` ]
           then
             echo "branch exists"
@@ -132,11 +132,11 @@ jobs:
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
 
-          branch_name="feat/sdk/v$version"
-
-          git pull
+          git fetch
           git branch --list
           
+          branch_name="feat/sdk/v$version"
+
           if [ `git branch --list $branch_name` ]
           then
             echo "branch exists"
