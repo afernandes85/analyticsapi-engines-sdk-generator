@@ -50,12 +50,9 @@ jobs:
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
           
-          git fetch
-          git branch --list
-
           branch_name="feat/sdk/v$version"
           
-          if [ `git branch --list $branch_name` ]
+          if [ `git ls-remote --heads origin $branch_name` ]
           then
             echo "branch exists"
             git checkout $branch_name
@@ -132,12 +129,9 @@ jobs:
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
 
-          git fetch
-          git branch --list
-          
           branch_name="feat/sdk/v$version"
 
-          if [ `git branch --list $branch_name` ]
+          if [ `git ls-remote --heads origin $branch_name` ]
           then
             echo "branch exists"
             git checkout $branch_name
