@@ -57,10 +57,12 @@ jobs:
         run: |
           cd analyticsapi-engines-dotnet-sdk
 
+          ls -l
+
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
 
-          version=$(<./Engines/.openapi-generator/VERSION)
+          version=$(<Engines/.openapi-generator/VERSION)
           branch_name="feat/sdk/v$version"
           
           if [ `git branch --list $branch_name` ]
