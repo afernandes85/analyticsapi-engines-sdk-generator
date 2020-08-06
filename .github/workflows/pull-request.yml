@@ -39,7 +39,7 @@ jobs:
           --skip-validate-spec
 
       - name: Build new SDK
-        run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
+        run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/sdk:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
       
       - name: Raise pull request
         run: |
