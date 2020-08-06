@@ -1,44 +1,131 @@
 name: CI
 
-env:
-  ANALYTICS_API_USERNAME_SERIAL: ${{ secrets.ANALYTICS_API_USERNAME_SERIAL }}
-  ANALYTICS_API_PASSWORD: ${{ secrets.ANALYTICS_API_PASSWORD }} 
+# env:
+#   ANALYTICS_API_USERNAME_SERIAL: ${{ secrets.ANALYTICS_API_USERNAME_SERIAL }}
+#   ANALYTICS_API_PASSWORD: ${{ secrets.ANALYTICS_API_PASSWORD }} 
 
 on:
-  push:
-    branches: [ master ]
+  # push:
+  #   branches: [ master ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  build:
+  dotnet:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Generate SDK using Open API Generator Custom Docker image
-      run: docker run --rm -v "${GITHUB_WORKSPACE}:/local" arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate --generator-name CustomCSharpNetCoreClientCodegen --input-spec /local/openapi-schema.json --output /local/GeneratedSDK --config /local/openapi-generator-config.json --http-user-agent engines-api/3.0.0/csharp --template-dir /local/Templates --skip-validate-spec
-
-    # - name: Setup .NET Core
-    #   uses: actions/setup-dotnet@v1
-    #   with:
-    #     dotnet-version: 2.2
+      - name: Install Hub
+        run: sudo snap install hub --classic
     
-    - name: Pull Docker image
-      # run: cd ${GITHUB_WORKSPACE}/GeneratedSDK && dotnet restore && dotnet build --configuration Release --no-restore
-      run: docker pull mcr.microsoft.com/dotnet/core/sdk:2.2
+      - name: Check out Analytics API dotnet SDK
+        uses: actions/checkout@v2
+        with:
+          repository: afernandes85/analyticsapi-engines-dotnet-sdk
+          path: analyticsapi-engines-dotnet-sdk
+          fetch-depth: 0
+          token: ${{ secrets.USER_API_KEY }}
 
-    - name: Install dependencies and build Generated SDK
-      # run: cd ${GITHUB_WORKSPACE}/GeneratedSDK && dotnet restore && dotnet build --configuration Release --no-restore
-      run: docker run --rm -v ${GITHUB_WORKSPACE}/GeneratedSDK:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release --no-restore
-        
-    - name: Install dependencies and build Tests
-      # run: cd ${GITHUB_WORKSPACE}/Tests && dotnet restore && dotnet build --configuration Release --no-restore
-      run: docker run --rm -v ${GITHUB_WORKSPACE}/Tests:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release --no-restore
+      - name: Check out Analytics API SDK Generator
+        uses: actions/checkout@v2
+        with:
+          repository: afernandes85/analyticsapi-engines-sdk-generator
+          path: analyticsapi-engines-sdk-generator
+          fetch-depth: 0
 
-    # - name: Run Tests
-    #   run: cd ${GITHUB_WORKSPACE}/Tests && dotnet test --no-restore --verbosity normal
+      - name: Generate new SDK using Open API Generator Custom Docker image
+        run: |
+          docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
+          -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk:/sdk \
+          arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
+          --generator-name CustomCSharpNetCoreClientCodegen \
+          --input-spec /generator/openapi-schema.json \
+          --output /sdk/Engines \
+          --config /generator/dotnet/openapi-generator-config.json \
+          --http-user-agent engines-api/3.0.0/csharp \
+          --template-dir /generator/dotnet/templates \
+          --skip-validate-spec
 
-    - name: Git status
-      run: cd ${GITHUB_WORKSPACE} && git status
+      - name: Build new SDK
+        run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
+      
+      - name: Raise pull request
+        run: |
+          cd analyticsapi-engines-dotnet-sdk
+          
+          git config user.email "${{ secrets.USER_EMAIL }}"
+          git config user.name "${{ secrets.USER }}"
+
+          branch_name="feat/sdk/updating-`date +%s`" 
+          git checkout -b $branch_name
+          git status
+          git add -A .
+          git commit -m "feat(sdk): Updating SDK"
+          echo "Committed all the changes"
+          
+          git push origin $branch_name
+          echo "Pushed all the changes to remote location"
+          
+          export GITHUB_USER=${{ secrets.USER }}
+          export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
+          hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+  
+  python:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Hub
+        run: sudo snap install hub --classic
+    
+      - name: Check out Analytics API python SDK
+        uses: actions/checkout@v2
+        with:
+          repository: afernandes85/analyticsapi-engines-python-sdk
+          path: analyticsapi-engines-python-sdk
+          fetch-depth: 0
+          token: ${{ secrets.USER_API_KEY }}
+
+      - name: Check out Analytics API SDK Generator
+        uses: actions/checkout@v2
+        with:
+          repository: afernandes85/analyticsapi-engines-sdk-generator
+          path: analyticsapi-engines-sdk-generator
+          fetch-depth: 0
+
+      - name: Generate new SDK using Open API Generator Custom Docker image
+        run: |
+          docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
+          -v ${GITHUB_WORKSPACE}/analyticsapi-engines-python-sdk:/sdk \
+          arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
+          --generator-name CustomPythonClientCodegen \
+          --input-spec /generator/openapi-schema.json \
+          --output /sdk/engines \
+          --config /generator/python/openapi-generator-config.json \
+          --http-user-agent engines-api/3.0.0/python \
+          --template-dir /generator/python/templates \
+          --skip-validate-spec
+
+      # - name: Build new SDK
+      #   run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-python-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
+      
+      - name: Raise pull request
+        run: |
+          cd analyticsapi-engines-python-sdk
+          
+          git config user.email "${{ secrets.USER_EMAIL }}"
+          git config user.name "${{ secrets.USER }}"
+
+          branch_name="feat/sdk/updating-`date +%s`" 
+          git checkout -b $branch_name
+          git status
+          git add -A .
+          git commit -m "feat(sdk): Updating SDK"
+          echo "Committed all the changes"
+          
+          git push origin $branch_name
+          echo "Pushed all the changes to remote location"
+          
+          export GITHUB_USER=${{ secrets.USER }}
+          export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
+          hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+
