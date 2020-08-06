@@ -54,6 +54,7 @@ jobs:
           
           if [ `git branch --list $branch_name` ]
           then
+            echo "branch exists"
             git checkout $branch_name
             git pull
             git status
@@ -66,6 +67,7 @@ jobs:
             git push origin $branch_name
             echo "Pushed all the changes to remote location"
           else
+            echo "new branch"
             git checkout -b $branch_name
             git status
             rm -r Engines
@@ -131,6 +133,7 @@ jobs:
           
           if [ `git branch --list $branch_name` ]
           then
+            echo "branch exists"
             git checkout $branch_name
             git pull
             git status
@@ -143,6 +146,7 @@ jobs:
             git push origin $branch_name
             echo "Pushed all the changes to remote location"
           else
+            echo "new branch"
             git checkout -b $branch_name
             git status
             rm -r fds.analyticsapi.engines
