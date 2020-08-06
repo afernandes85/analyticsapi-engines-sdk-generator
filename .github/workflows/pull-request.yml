@@ -30,11 +30,10 @@ jobs:
       - name: Generate new SDK using Open API Generator Custom Docker image
         run: |
           docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk:/sdk \
           arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
           --generator-name CustomCSharpNetCoreClientCodegen \
           --input-spec /generator/openapi-schema.json \
-          --output /sdk/Engines \
+          --output /generator/sdk \
           --config /generator/dotnet/openapi-generator-config.json \
           --template-dir /generator/dotnet/templates \
           --skip-validate-spec
@@ -56,7 +55,10 @@ jobs:
           if [ `git branch --list $branch_name` ]
           then
             git checkout $branch_name
+            git pull
             git status
+            rm -r fds.analyticsapi.engines
+            cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines
             git add -A .
             git commit -m "feat(sdk): v$version"
             echo "Committed all the changes"
@@ -75,7 +77,7 @@ jobs:
             
             export GITHUB_USER=${{ secrets.USER }}
             export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+            hub pull-request -m "feat(sdk): v$version" -h $branch_name
           fi         
   
   python:
@@ -103,11 +105,10 @@ jobs:
       - name: Generate new SDK using Open API Generator Custom Docker image
         run: |
           docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          -v ${GITHUB_WORKSPACE}/analyticsapi-engines-python-sdk:/sdk \
           arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
           --generator-name CustomPythonClientCodegen \
           --input-spec /generator/openapi-schema.json \
-          --output /sdk/engines \
+          --output /generator/sdk \
           --config /generator/python/openapi-generator-config.json \
           --template-dir /generator/python/templates \
           --skip-validate-spec
@@ -129,7 +130,10 @@ jobs:
           if [ `git branch --list $branch_name` ]
           then
             git checkout $branch_name
+            git pull
             git status
+            rm -r fds.analyticsapi.engines
+            cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines 
             git add -A .
             git commit -m "feat(sdk): v$version"
             echo "Committed all the changes"
@@ -148,6 +152,6 @@ jobs:
             
             export GITHUB_USER=${{ secrets.USER }}
             export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+            hub pull-request -m "feat(sdk): v$version" -h $branch_name
           fi
 
