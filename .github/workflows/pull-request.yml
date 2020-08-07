@@ -52,7 +52,7 @@ jobs:
           
           branch_name="feat/sdk/v$version"
           
-          if [ `git ls-remote --heads origin $branch_name` ]
+          if [ "git ls-remote --heads origin $branch_name" ]
           then
             echo "branch exists"
             git checkout $branch_name
@@ -131,7 +131,7 @@ jobs:
 
           branch_name="feat/sdk/v$version"
 
-          if [ `git ls-remote --heads origin $branch_name` ]
+          if [ "git ls-remote --heads origin $branch_name" ]
           then
             echo "branch exists"
             git checkout $branch_name
