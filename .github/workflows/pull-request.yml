@@ -1,12 +1,6 @@
 name: Generate SDKs and create PRs for individual language repositories
 
-# env:
-#   ANALYTICS_API_USERNAME_SERIAL: ${{ secrets.ANALYTICS_API_USERNAME_SERIAL }}
-#   ANALYTICS_API_PASSWORD: ${{ secrets.ANALYTICS_API_PASSWORD }} 
-
 on:
-  # push:
-  #   branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -36,39 +30,64 @@ jobs:
       - name: Generate new SDK using Open API Generator Custom Docker image
         run: |
           docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk:/sdk \
           arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
           --generator-name CustomCSharpNetCoreClientCodegen \
           --input-spec /generator/openapi-schema.json \
-          --output /sdk/Engines \
+          --output /generator/sdk \
           --config /generator/dotnet/openapi-generator-config.json \
-          --http-user-agent engines-api/3.0.0/csharp \
           --template-dir /generator/dotnet/templates \
           --skip-validate-spec
 
       - name: Build new SDK
-        run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-dotnet-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
+        run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/sdk:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
       
       - name: Raise pull request
         run: |
-          cd analyticsapi-engines-dotnet-sdk
+          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json | cut -c20-24)
           
+          cd analyticsapi-engines-dotnet-sdk
+
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
-
-          branch_name="feat/sdk/updating-`date +%s`" 
-          git checkout -b $branch_name
-          git status
-          git add -A .
-          git commit -m "feat(sdk): Updating SDK"
-          echo "Committed all the changes"
           
-          git push origin $branch_name
-          echo "Pushed all the changes to remote location"
+          branch_name="feat/sdk/v$version"
           
-          export GITHUB_USER=${{ secrets.USER }}
-          export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-          hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+          if [ "git ls-remote --heads origin $branch_name" ]
+          then
+            echo "branch exists"
+            git checkout $branch_name
+            git pull
+            rm -r Engines
+            cp -r ../analyticsapi-engines-sdk-generator/sdk Engines
+            git status
+            if git diff-index --quiet HEAD -- 
+            then 
+              echo "No changes to commit." 
+            else 
+              git add -A .
+              git commit -m "feat(sdk): v$version"
+              echo "Committed all the changes"
+            
+              git push origin $branch_name
+              echo "Pushed all the changes to remote location"
+            fi
+          else
+            echo "new branch"
+            git checkout -b $branch_name
+            rm -r Engines
+            cp -r ../analyticsapi-engines-sdk-generator/sdk Engines
+            git status
+            git add -A .
+            git commit -m "feat(sdk): v$version"
+            echo "Committed all the changes"
+            
+            git push origin $branch_name
+            echo "Pushed all the changes to remote location"
+            
+            export GITHUB_USER=${{ secrets.USER }}
+            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
+            hub pull-request -m "feat(sdk): v$version" -h $branch_name
+          fi         
   
   python:
     runs-on: ubuntu-latest
@@ -95,13 +114,11 @@ jobs:
       - name: Generate new SDK using Open API Generator Custom Docker image
         run: |
           docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          -v ${GITHUB_WORKSPACE}/analyticsapi-engines-python-sdk:/sdk \
           arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
           --generator-name CustomPythonClientCodegen \
           --input-spec /generator/openapi-schema.json \
-          --output /sdk/engines \
+          --output /generator/sdk \
           --config /generator/python/openapi-generator-config.json \
-          --http-user-agent engines-api/3.0.0/python \
           --template-dir /generator/python/templates \
           --skip-validate-spec
 
@@ -110,22 +127,49 @@ jobs:
       
       - name: Raise pull request
         run: |
+          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/python/openapi-generator-config.json | cut -c20-24)
+          
           cd analyticsapi-engines-python-sdk
           
           git config user.email "${{ secrets.USER_EMAIL }}"
           git config user.name "${{ secrets.USER }}"
 
-          branch_name="feat/sdk/updating-`date +%s`" 
-          git checkout -b $branch_name
-          git status
-          git add -A .
-          git commit -m "feat(sdk): Updating SDK"
-          echo "Committed all the changes"
-          
-          git push origin $branch_name
-          echo "Pushed all the changes to remote location"
-          
-          export GITHUB_USER=${{ secrets.USER }}
-          export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-          hub pull-request -m "feat(sdk): Updating SDK" -h $branch_name
+          branch_name="feat/sdk/v$version"
+
+          if [ "git ls-remote --heads origin $branch_name" ]
+          then
+            echo "branch exists"
+            git checkout $branch_name
+            git pull
+            rm -r fds.analyticsapi.engines
+            cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines 
+            git status
+            if git diff-index --quiet HEAD -- 
+            then 
+              echo "No changes to commit." 
+            else
+              git add -A .
+              git commit -m "feat(sdk): v$version"
+              echo "Committed all the changes"
+              
+              git push origin $branch_name
+              echo "Pushed all the changes to remote location"
+            fi
+          else
+            echo "new branch"
+            git checkout -b $branch_name
+            rm -r fds.analyticsapi.engines
+            cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines
+            git status
+            git add -A .
+            git commit -m "feat(sdk): v$version"
+            echo "Committed all the changes"
+            
+            git push origin $branch_name
+            echo "Pushed all the changes to remote location"
+            
+            export GITHUB_USER=${{ secrets.USER }}
+            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
+            hub pull-request -m "feat(sdk): v$version" -h $branch_name
+          fi
 
