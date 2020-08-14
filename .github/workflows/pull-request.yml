@@ -50,6 +50,7 @@ jobs:
       
       - name: Raise pull request
         run: |
+          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json | cut -c20-24)
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           
           cd analyticsapi-engines-dotnet-sdk
@@ -68,7 +69,7 @@ jobs:
             cp -r ../analyticsapi-engines-sdk-generator/dotnet/sdk Engines
             git status
             git add -A .
-            git commit -m "feat(sdk): Generator PR $pr_number"
+            git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
             echo "Committed all the changes"
             
             git push origin $branch_name
@@ -76,7 +77,7 @@ jobs:
             
             export GITHUB_USER=${{ secrets.USER }}
             export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): Generator PR $pr_number" -h $branch_name
+            hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
           else
             echo "branch exists"
             git checkout $branch_name
@@ -89,7 +90,7 @@ jobs:
               echo "No changes to commit." 
             else 
               git add -A .
-              git commit -m "feat(sdk): Generator PR $pr_number"
+              git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
               echo "Committed all the changes"
             
               git push origin $branch_name
@@ -142,6 +143,7 @@ jobs:
       
       - name: Raise pull request
         run: |
+          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json | cut -c20-24)
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           
           cd analyticsapi-engines-python-sdk
@@ -160,7 +162,7 @@ jobs:
             cp -r ../analyticsapi-engines-sdk-generator/python/sdk fds.analyticsapi.engines
             git status
             git add -A .
-            git commit -m "feat(sdk): Generator PR $pr_number"
+            git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
             echo "Committed all the changes"
             
             git push origin $branch_name
@@ -168,7 +170,7 @@ jobs:
             
             export GITHUB_USER=${{ secrets.USER }}
             export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): Generator PR $pr_number" -h $branch_name
+            hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
           else
             echo "branch exists"
             git checkout $branch_name
@@ -181,7 +183,7 @@ jobs:
               echo "No changes to commit." 
             else
               git add -A .
-              git commit -m "feat(sdk): Generator PR $pr_number"
+              git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
               echo "Committed all the changes"
               
               git push origin $branch_name
