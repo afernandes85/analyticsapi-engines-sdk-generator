@@ -58,9 +58,26 @@ jobs:
           git config user.name "${{ secrets.USER }}"
           
           branch_name="feat/sdk/v$version"
-          
-          if [ "git ls-remote --exit-code --heads origin $branch_name | wc -l" ]
+          remote_branch_check=`git ls-remote --heads origin $branch_name`
+
+          if [ -z "$remote_branch_check" ]
           then
+            echo "new branch"
+            git checkout -b $branch_name
+            rm -r Engines
+            cp -r ../analyticsapi-engines-sdk-generator/dotnet/sdk Engines
+            git status
+            git add -A .
+            git commit -m "feat(sdk): v$version"
+            echo "Committed all the changes"
+            
+            git push origin $branch_name
+            echo "Pushed all the changes to remote location"
+            
+            export GITHUB_USER=${{ secrets.USER }}
+            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
+            hub pull-request -m "feat(sdk): v$version" -h $branch_name
+          else
             echo "branch exists"
             git checkout $branch_name
             git pull
@@ -78,22 +95,6 @@ jobs:
               git push origin $branch_name
               echo "Pushed all the changes to remote location"
             fi
-          else
-            echo "new branch"
-            git checkout -b $branch_name
-            rm -r Engines
-            cp -r ../analyticsapi-engines-sdk-generator/dotnet/sdk Engines
-            git status
-            git add -A .
-            git commit -m "feat(sdk): v$version"
-            echo "Committed all the changes"
-            
-            git push origin $branch_name
-            echo "Pushed all the changes to remote location"
-            
-            export GITHUB_USER=${{ secrets.USER }}
-            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): v$version" -h $branch_name
           fi         
   
   python:
@@ -149,9 +150,26 @@ jobs:
           git config user.name "${{ secrets.USER }}"
 
           branch_name="feat/sdk/v$version"
+          remote_branch_check=`git ls-remote --heads origin $branch_name`
 
-          if [ "git ls-remote --exit-code --heads origin $branch_name | wc -l" ]
+          if [ -z "$remote_branch_check" ]
           then
+            echo "new branch"
+            git checkout -b $branch_name
+            rm -r fds.analyticsapi.engines
+            cp -r ../analyticsapi-engines-sdk-generator/python/sdk fds.analyticsapi.engines
+            git status
+            git add -A .
+            git commit -m "feat(sdk): v$version"
+            echo "Committed all the changes"
+            
+            git push origin $branch_name
+            echo "Pushed all the changes to remote location"
+            
+            export GITHUB_USER=${{ secrets.USER }}
+            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
+            hub pull-request -m "feat(sdk): v$version" -h $branch_name
+          else
             echo "branch exists"
             git checkout $branch_name
             git pull
@@ -169,21 +187,5 @@ jobs:
               git push origin $branch_name
               echo "Pushed all the changes to remote location"
             fi
-          else
-            echo "new branch"
-            git checkout -b $branch_name
-            rm -r fds.analyticsapi.engines
-            cp -r ../analyticsapi-engines-sdk-generator/python/sdk fds.analyticsapi.engines
-            git status
-            git add -A .
-            git commit -m "feat(sdk): v$version"
-            echo "Committed all the changes"
-            
-            git push origin $branch_name
-            echo "Pushed all the changes to remote location"
-            
-            export GITHUB_USER=${{ secrets.USER }}
-            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): v$version" -h $branch_name
           fi
 
