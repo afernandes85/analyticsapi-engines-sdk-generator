@@ -27,13 +27,20 @@ jobs:
           path: analyticsapi-engines-sdk-generator
           fetch-depth: 0
 
+      - name: Build the Docker image
+        run: docker build --build-arg \
+          VERSION=4.2.2 \
+          -t openapi-generator-cli-custom \
+          -f Dockerfile \
+          ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
+
       - name: Generate new SDK using Open API Generator Custom Docker image
         run: |
           docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
+          openapi-generator-cli-custom generate \
           --generator-name CustomCSharpNetCoreClientCodegen \
           --input-spec /generator/openapi-schema.json \
-          --output /generator/sdk \
+          --output /generator/dotnet/sdk \
           --config /generator/dotnet/openapi-generator-config.json \
           --template-dir /generator/dotnet/templates \
           --skip-validate-spec
@@ -58,7 +65,7 @@ jobs:
             git checkout $branch_name
             git pull
             rm -r Engines
-            cp -r ../analyticsapi-engines-sdk-generator/sdk Engines
+            cp -r ../analyticsapi-engines-sdk-generator/dotnet/sdk Engines
             git status
             if git diff-index --quiet HEAD -- 
             then 
@@ -75,7 +82,7 @@ jobs:
             echo "new branch"
             git checkout -b $branch_name
             rm -r Engines
-            cp -r ../analyticsapi-engines-sdk-generator/sdk Engines
+            cp -r ../analyticsapi-engines-sdk-generator/dotnet/sdk Engines
             git status
             git add -A .
             git commit -m "feat(sdk): v$version"
@@ -111,13 +118,20 @@ jobs:
           path: analyticsapi-engines-sdk-generator
           fetch-depth: 0
 
+      - name: Build the Docker image
+        run: docker build --build-arg \
+          VERSION=4.2.2 \
+          -t openapi-generator-cli-custom \
+          -f Dockerfile \
+          ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
+
       - name: Generate new SDK using Open API Generator Custom Docker image
         run: |
           docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          arnoldfernandes/openapi-generator-cli-custom:4.2.2 generate \
+          openapi-generator-cli-custom generate \
           --generator-name CustomPythonClientCodegen \
           --input-spec /generator/openapi-schema.json \
-          --output /generator/sdk \
+          --output /generator/python/sdk \
           --config /generator/python/openapi-generator-config.json \
           --template-dir /generator/python/templates \
           --skip-validate-spec
@@ -142,7 +156,7 @@ jobs:
             git checkout $branch_name
             git pull
             rm -r fds.analyticsapi.engines
-            cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines 
+            cp -r ../analyticsapi-engines-sdk-generator/python/sdk fds.analyticsapi.engines 
             git status
             if git diff-index --quiet HEAD -- 
             then 
@@ -159,7 +173,7 @@ jobs:
             echo "new branch"
             git checkout -b $branch_name
             rm -r fds.analyticsapi.engines
-            cp -r ../analyticsapi-engines-sdk-generator/sdk fds.analyticsapi.engines
+            cp -r ../analyticsapi-engines-sdk-generator/python/sdk fds.analyticsapi.engines
             git status
             git add -A .
             git commit -m "feat(sdk): v$version"
