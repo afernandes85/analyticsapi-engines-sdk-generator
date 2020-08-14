@@ -51,7 +51,8 @@ jobs:
       - name: Raise pull request
         run: |
           version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json | cut -c20-24)
-          echo ${GITHUB_REF}
+          pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo $pull_number
 
           cd analyticsapi-engines-dotnet-sdk
 
@@ -59,7 +60,7 @@ jobs:
           git config user.name "${{ secrets.USER }}"
           
           branch_name="feat/sdk/v$version"
-          remote_branch_check=`git ls-remote --heads origin $branch_name`
+          remote_branch_check=$(git ls-remote --heads origin $branch_name)
 
           if [ -z "$remote_branch_check" ]
           then
@@ -151,7 +152,7 @@ jobs:
           git config user.name "${{ secrets.USER }}"
 
           branch_name="feat/sdk/v$version"
-          remote_branch_check=`git ls-remote --heads origin $branch_name`
+          remote_branch_check=$(git ls-remote --heads origin $branch_name)
 
           if [ -z "$remote_branch_check" ]
           then
