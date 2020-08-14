@@ -31,7 +31,7 @@ jobs:
         run: |
           docker build --build-arg VERSION=4.2.2 \
           -t openapi-generator-cli-custom \
-          -f Dockerfile \
+          -f ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator/Dockerfile \
           ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
 
       - name: Generate new SDK using Open API Generator Custom Docker image
@@ -122,8 +122,7 @@ jobs:
         run: |
           docker build --build-arg VERSION=4.2.2 \
           -t openapi-generator-cli-custom \
-          -f Dockerfile \
-          ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
+          -f ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator/Dockerfile 
 
       - name: Generate new SDK using Open API Generator Custom Docker image
         run: |
