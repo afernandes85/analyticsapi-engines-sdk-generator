@@ -45,13 +45,14 @@ jobs:
           --template-dir /generator/dotnet/templates \
           --skip-validate-spec
 
-      - name: Build new SDK
-        run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/dotnet/sdk:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
+      # - name: Build new SDK
+      #   run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/dotnet/sdk:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
       
       - name: Raise pull request
         run: |
           version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json | cut -c20-24)
-          
+          echo ${{ github.head_ref }}
+
           cd analyticsapi-engines-dotnet-sdk
 
           git config user.email "${{ secrets.USER_EMAIL }}"
