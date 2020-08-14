@@ -59,7 +59,7 @@ jobs:
           
           branch_name="feat/sdk/v$version"
           
-          if [ "git ls-remote --exit-code --heads origin $branch_name" ]
+          if [ "git ls-remote --exit-code --heads origin $branch_name | wc -l" ]
           then
             echo "branch exists"
             git checkout $branch_name
@@ -150,7 +150,7 @@ jobs:
 
           branch_name="feat/sdk/v$version"
 
-          if [ "git ls-remote --exit-code --heads origin $branch_name" ]
+          if [ "git ls-remote --exit-code --heads origin $branch_name | wc -l" ]
           then
             echo "branch exists"
             git checkout $branch_name
