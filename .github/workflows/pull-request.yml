@@ -51,7 +51,7 @@ jobs:
       - name: Raise pull request
         run: |
           version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/dotnet/openapi-generator-config.json | cut -c20-24)
-          echo ${{ github.head_ref }}
+          echo ${GITHUB_REF}
 
           cd analyticsapi-engines-dotnet-sdk
 
