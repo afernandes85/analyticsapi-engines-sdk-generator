@@ -28,7 +28,8 @@ jobs:
           fetch-depth: 0
 
       - name: Build the Docker image
-        run: docker build --build-arg VERSION=4.2.2 \
+        run: |
+          docker build --build-arg VERSION=4.2.2 \
           -t openapi-generator-cli-custom \
           -f Dockerfile \
           ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
@@ -118,7 +119,8 @@ jobs:
           fetch-depth: 0
 
       - name: Build the Docker image
-        run: docker build --build-arg VERSION=4.2.2 \
+        run: |
+          docker build --build-arg VERSION=4.2.2 \
           -t openapi-generator-cli-custom \
           -f Dockerfile \
           ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
