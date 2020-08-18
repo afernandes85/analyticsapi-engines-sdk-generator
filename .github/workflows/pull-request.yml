@@ -1,7 +1,7 @@
 name: Generate SDKs and create PRs for individual language repositories
 
 env:
-  USER_API_KEY: ${{ secrets.USER_API_KEY }}
+  INPUT_TOKEN: ${{ secrets.USER_API_KEY }}
   USER_EMAIL: ${{ secrets.USER_EMAIL }}
   USER: ${{ secrets.USER }}
 
@@ -23,7 +23,6 @@ jobs:
           repository: afernandes85/analyticsapi-engines-dotnet-sdk
           path: sdk
           fetch-depth: 0
-          token: ${{ USER_API_KEY }}
 
       - name: Check out Analytics API SDK Generator
         uses: actions/checkout@v2
@@ -81,7 +80,7 @@ jobs:
             echo "Pushed all the changes to remote location"
             
             export GITHUB_USER=$USER
-            export GITHUB_TOKEN=$USER_API_KEY
+            export GITHUB_TOKEN=$INPUT_TOKEN
             hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
           else
             echo "branch exists"
@@ -116,7 +115,6 @@ jobs:
           repository: afernandes85/analyticsapi-engines-python-sdk
           path: sdk
           fetch-depth: 0
-          token: $USER_API_KEY
 
       - name: Check out Analytics API SDK Generator
         uses: actions/checkout@v2
@@ -174,7 +172,7 @@ jobs:
             echo "Pushed all the changes to remote location"
             
             export GITHUB_USER=$USER
-            export GITHUB_TOKEN=$USER_API_KEY
+            export GITHUB_TOKEN=$INPUT_TOKEN
             hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
           else
             echo "branch exists"
