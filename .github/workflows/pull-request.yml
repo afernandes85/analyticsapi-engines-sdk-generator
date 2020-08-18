@@ -59,8 +59,8 @@ jobs:
           
           cd sdk
 
-          git config user.email "$USER_EMAIL"
-          git config user.name "$USER"
+          git config user.email $USER_EMAIL
+          git config user.name $USER
           
           branch_name="feat/sdk/generator-pr-$pr_number"
           remote_branch_check=$(git ls-remote --heads origin $branch_name)
@@ -83,8 +83,8 @@ jobs:
               git push origin $branch_name
               echo "Pushed all the changes to remote location"
               
-              export GITHUB_USER="$USER"
-              export GITHUB_TOKEN="$INPUT_TOKEN"
+              export GITHUB_USER=$USER
+              export GITHUB_TOKEN=$INPUT_TOKEN
               hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
             fi
           else
@@ -156,8 +156,8 @@ jobs:
           
           cd sdk
           
-          git config user.email "$USER_EMAIL"
-          git config user.name "$USER"
+          git config user.email $USER_EMAIL
+          git config user.name $USER
 
           branch_name="feat/sdk/generator-pr-$pr_number"
           remote_branch_check=$(git ls-remote --heads origin $branch_name)
@@ -180,8 +180,8 @@ jobs:
               git push origin $branch_name
               echo "Pushed all the changes to remote location"
               
-              export GITHUB_USER="$USER"
-              export GITHUB_TOKEN="$INPUT_TOKEN"
+              export GITHUB_USER=$USER
+              export GITHUB_TOKEN=$INPUT_TOKEN
               hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
             fi
           else
