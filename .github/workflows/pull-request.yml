@@ -83,8 +83,8 @@ jobs:
               git push origin $branch_name
               echo "Pushed all the changes to remote location"
               
-              export GITHUB_USER=$USER
-              export GITHUB_TOKEN=$INPUT_TOKEN
+              export GITHUB_USER="$USER"
+              export GITHUB_TOKEN="$INPUT_TOKEN"
               hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
             fi
           else
@@ -180,8 +180,8 @@ jobs:
               git push origin $branch_name
               echo "Pushed all the changes to remote location"
               
-              export GITHUB_USER=$USER
-              export GITHUB_TOKEN=$INPUT_TOKEN
+              export GITHUB_USER="$USER"
+              export GITHUB_TOKEN="$INPUT_TOKEN"
               hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
             fi
           else
