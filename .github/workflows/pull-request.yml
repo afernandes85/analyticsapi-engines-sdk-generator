@@ -59,6 +59,7 @@ jobs:
           
           cd sdk
 
+          echo $USER_EMAIL
           git config user.email $USER_EMAIL
           git config user.name $USER
           
