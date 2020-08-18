@@ -72,16 +72,21 @@ jobs:
             rm -r Engines
             cp -r ../generator/languages/dotnet/sdk Engines
             git status
-            git add -A .
-            git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
-            echo "Committed all the changes"
-            
-            git push origin $branch_name
-            echo "Pushed all the changes to remote location"
-            
-            export GITHUB_USER=$USER
-            export GITHUB_TOKEN=$INPUT_TOKEN
-            hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
+            if git diff-index --quiet HEAD -- 
+            then 
+              echo "No changes to commit." 
+            else
+              git add -A .
+              git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
+              echo "Committed all the changes"
+              
+              git push origin $branch_name
+              echo "Pushed all the changes to remote location"
+              
+              export GITHUB_USER=$USER
+              export GITHUB_TOKEN=$INPUT_TOKEN
+              hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
+            fi
           else
             echo "branch exists"
             git checkout $branch_name
@@ -164,16 +169,21 @@ jobs:
             rm -r fds.analyticsapi.engines
             cp -r ../generator/languages/python/sdk fds.analyticsapi.engines
             git status
-            git add -A .
-            git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
-            echo "Committed all the changes"
-            
-            git push origin $branch_name
-            echo "Pushed all the changes to remote location"
-            
-            export GITHUB_USER=$USER
-            export GITHUB_TOKEN=$INPUT_TOKEN
-            hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
+            if git diff-index --quiet HEAD -- 
+            then 
+              echo "No changes to commit." 
+            else
+              git add -A .
+              git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
+              echo "Committed all the changes"
+              
+              git push origin $branch_name
+              echo "Pushed all the changes to remote location"
+              
+              export GITHUB_USER=$USER
+              export GITHUB_TOKEN=$INPUT_TOKEN
+              hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
+            fi
           else
             echo "branch exists"
             git checkout $branch_name
