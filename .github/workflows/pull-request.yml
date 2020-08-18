@@ -59,9 +59,8 @@ jobs:
           
           cd sdk
 
-          echo $USER_EMAIL
-          git config user.email $USER_EMAIL
-          git config user.name $USER
+          git config user.email ${{ USER_EMAIL }}
+          git config user.name ${{ USER }}
           
           branch_name="feat/sdk/generator-pr-$pr_number"
           remote_branch_check=$(git ls-remote --heads origin $branch_name)
@@ -157,8 +156,8 @@ jobs:
           
           cd sdk
           
-          git config user.email $USER_EMAIL
-          git config user.name $USER
+          git config user.email ${{ USER_EMAIL }}
+          git config user.name ${{ USER }}
 
           branch_name="feat/sdk/generator-pr-$pr_number"
           remote_branch_check=$(git ls-remote --heads origin $branch_name)
