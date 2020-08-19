@@ -55,7 +55,7 @@ jobs:
       #   run: docker run --rm -v ${GITHUB_WORKSPACE}/generator/languages/dotnet/sdk:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
       
       - name: Raise pull request
-        run: raise-pull-request.sh
+        run: sh raise-pull-request.sh
   
   python:
     runs-on: ubuntu-latest
