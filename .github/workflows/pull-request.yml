@@ -177,6 +177,8 @@ jobs:
               git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
               echo "Committed all the changes"
               
+              git config user.email
+
               git push origin $branch_name
               echo "Pushed all the changes to remote location"
               
