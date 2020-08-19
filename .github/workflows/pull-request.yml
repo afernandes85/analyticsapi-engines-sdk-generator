@@ -121,7 +121,7 @@ jobs:
           repository: afernandes85/analyticsapi-engines-python-sdk
           path: sdk
           fetch-depth: 0
-          token: $USER_API_KEY
+          token: ${{ env.USER_API_KEY }}
 
       - name: Check out Analytics API SDK Generator
         uses: actions/checkout@v2
