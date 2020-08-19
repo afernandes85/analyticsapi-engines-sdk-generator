@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-version=$(grep -Po '"packageVersion":.*?[^\\]",' generator/languages/dotnet/openapi-generator-config.json | cut -c20-24)
+language=$1
+
+version=$(grep -Po '"packageVersion":.*?[^\\]",' generator/languages/$language/openapi-generator-config.json | cut -c20-24)
 pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 
 cd sdk
@@ -16,7 +18,7 @@ then
   echo "new branch"
   git checkout -b $branch_name
   rm -r Engines
-  cp -r ../generator/languages/dotnet/sdk Engines
+  cp -r ../generator/languages/$language/sdk Engines
   git status
   if git diff-index --quiet HEAD -- 
   then 
@@ -38,7 +40,7 @@ else
   git checkout $branch_name
   git pull
   rm -r Engines
-  cp -r ../generator/languages/dotnet/sdk Engines
+  cp -r ../generator/languages/$language/sdk Engines
   git status
   if git diff-index --quiet HEAD -- 
   then 
