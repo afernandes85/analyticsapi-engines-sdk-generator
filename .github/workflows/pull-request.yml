@@ -1,4 +1,4 @@
-name: Generate SDKs and create PRs for individual language repositories
+name: Generate SDKs and raise PRs in individual language repositories
 
 env:
   USER_API_KEY: ${{ secrets.USER_API_KEY }}
@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Hub
-        run: sudo snap install hub --classic
-    
       - name: Check out SDK repository
         uses: actions/checkout@v2
         with:
@@ -39,9 +36,6 @@ jobs:
       - name: Generate SDK
         run: generator/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION dotnet CustomCSharpNetCoreClientCodegen
 
-      # - name: Build new SDK
-      #   run: docker run --rm -v ${GITHUB_WORKSPACE}/generator/languages/dotnet/sdk:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
-      
       - name: Raise pull request on SDK repository
         run: generator/scripts/raise-pull-request.sh dotnet $GITHUB_DOTNET_SDK_FOLDER
   
@@ -49,9 +43,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Hub
-        run: sudo snap install hub --classic
-    
       - name: Check out SDK repository
         uses: actions/checkout@v2
         with:
@@ -68,9 +59,6 @@ jobs:
 
       - name: Generate SDK
         run: generator/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION python CustomPythonClientCodegen
-      
-      # - name: Build new SDK
-      #   run: docker run --rm -v ${GITHUB_WORKSPACE}/sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
       
       - name: Raise pull request on SDK repository
         run: generator/scripts/raise-pull-request.sh python $GITHUB_PYTHON_SDK_FOLDER
