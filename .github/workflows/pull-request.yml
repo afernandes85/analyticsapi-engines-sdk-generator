@@ -31,7 +31,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: generator
-          fetch-depth: 0
 
       - name: Generate SDK
         run: generator/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION dotnet CustomCSharpNetCoreClientCodegen
@@ -55,7 +54,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: generator
-          fetch-depth: 0
 
       - name: Generate SDK
         run: generator/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION python CustomPythonClientCodegen
@@ -68,6 +66,7 @@ jobs:
 
     steps:
       - name: Check out SDK repository
+        if: env.GITHUB_JAVA_SDK_REPO
         uses: actions/checkout@v2
         with:
           repository: ${{ env.GITHUB_JAVA_SDK_REPO }}
@@ -76,13 +75,15 @@ jobs:
           token: ${{ env.USER_API_KEY }}
 
       - name: Check out Generator repository
+        if: env.GITHUB_JAVA_SDK_REPO
         uses: actions/checkout@v2
         with:
           path: generator
-          fetch-depth: 0
 
       - name: Generate SDK
+        if: env.GITHUB_JAVA_SDK_REPO
         run: generator/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION java CustomJavaClientCodegen
       
       - name: Raise pull request on SDK repository
+        if: env.GITHUB_JAVA_SDK_REPO
         run: generator/scripts/raise-pull-request.sh java $GITHUB_JAVA_SDK_FOLDER
