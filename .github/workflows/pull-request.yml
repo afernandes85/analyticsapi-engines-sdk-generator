@@ -20,6 +20,7 @@ jobs:
 
     steps:
       - name: Check out SDK repository
+        if: env.GITHUB_DOTNET_SDK_REPO
         uses: actions/checkout@v2
         with:
           repository: ${{ env.GITHUB_DOTNET_SDK_REPO }}
@@ -28,14 +29,17 @@ jobs:
           token: ${{ env.USER_API_KEY }}
 
       - name: Check out Generator repository
+        if: env.GITHUB_DOTNET_SDK_REPO
         uses: actions/checkout@v2
         with:
           path: generator
 
       - name: Generate SDK
+        if: env.GITHUB_DOTNET_SDK_REPO
         run: generator/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION dotnet CustomCSharpNetCoreClientCodegen
 
       - name: Raise pull request on SDK repository
+        if: env.GITHUB_DOTNET_SDK_REPO
         run: generator/scripts/raise-pull-request.sh dotnet $GITHUB_DOTNET_SDK_FOLDER
   
   python:
@@ -43,6 +47,7 @@ jobs:
 
     steps:
       - name: Check out SDK repository
+        if: env.GITHUB_PYTHON_SDK_REPO
         uses: actions/checkout@v2
         with:
           repository: ${{ env.GITHUB_PYTHON_SDK_REPO }}
@@ -51,14 +56,17 @@ jobs:
           token: ${{ env.USER_API_KEY }}
 
       - name: Check out Generator repository
+        if: env.GITHUB_PYTHON_SDK_REPO
         uses: actions/checkout@v2
         with:
           path: generator
 
       - name: Generate SDK
+        if: env.GITHUB_PYTHON_SDK_REPO
         run: generator/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION python CustomPythonClientCodegen
       
       - name: Raise pull request on SDK repository
+        if: env.GITHUB_PYTHON_SDK_REPO
         run: generator/scripts/raise-pull-request.sh python $GITHUB_PYTHON_SDK_FOLDER
 
   java:
