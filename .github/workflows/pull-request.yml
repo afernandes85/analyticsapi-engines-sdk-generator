@@ -16,7 +16,6 @@ on:
 
 jobs:
   dotnet:
-    if: ${{ env.GITHUB_DOTNET_SDK_REPO }}
     runs-on: ubuntu-latest
 
     steps:
@@ -41,7 +40,6 @@ jobs:
         run: generator/scripts/raise-pull-request.sh dotnet $GITHUB_DOTNET_SDK_FOLDER
   
   python:
-    if: ${{ env.GITHUB_PYTHON_SDK_REPO }}
     runs-on: ubuntu-latest
 
     steps:
@@ -66,7 +64,6 @@ jobs:
         run: generator/scripts/raise-pull-request.sh python $GITHUB_PYTHON_SDK_FOLDER
 
   java:
-    if: ${{ env.GITHUB_JAVA_SDK_REPO }}
     runs-on: ubuntu-latest
 
     steps:
