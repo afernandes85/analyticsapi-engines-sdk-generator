@@ -16,3 +16,6 @@ TestResults/
 
 *.jar
 *.class
+
+# Ignore SDK folders 
+**/sdk/
