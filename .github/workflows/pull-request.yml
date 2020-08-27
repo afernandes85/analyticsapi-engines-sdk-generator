@@ -1,4 +1,14 @@
-name: Generate SDKs and create PRs for individual language repositories
+name: Generate SDKs and raise PRs in individual language repositories
+
+env:
+  USER_API_KEY: ${{ secrets.USER_API_KEY }}
+  USER_EMAIL: ${{ secrets.USER_EMAIL }}
+  USER: ${{ secrets.USER }}
+  OPENAPI_GENERATOR_VERSION: 4.2.2
+  GITHUB_DOTNET_SDK_REPO: afernandes85/analyticsapi-engines-dotnet-sdk
+  GITHUB_DOTNET_SDK_FOLDER: Engines
+  GITHUB_PYTHON_SDK_REPO: afernandes85/analyticsapi-engines-python-sdk
+  GITHUB_PYTHON_SDK_FOLDER: fds.analyticsapi.engines
 
 on:
   pull_request:
@@ -9,185 +19,79 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Hub
-        run: sudo snap install hub --classic
-    
-      - name: Check out Analytics API dotnet SDK
+      - name: Check out SDK repository
+        if: env.GITHUB_DOTNET_SDK_REPO
         uses: actions/checkout@v2
         with:
-          repository: afernandes85/analyticsapi-engines-dotnet-sdk
-          path: analyticsapi-engines-dotnet-sdk
+          repository: ${{ env.GITHUB_DOTNET_SDK_REPO }}
+          path: sdk
           fetch-depth: 0
-          token: ${{ secrets.USER_API_KEY }}
+          token: ${{ env.USER_API_KEY }}
 
-      - name: Check out Analytics API SDK Generator
+      - name: Check out Generator repository
+        if: env.GITHUB_DOTNET_SDK_REPO
         uses: actions/checkout@v2
         with:
-          repository: afernandes85/analyticsapi-engines-sdk-generator
-          path: analyticsapi-engines-sdk-generator
-          fetch-depth: 0
+          path: generator
 
-      - name: Build the Docker image
-        run: |
-          docker build --build-arg VERSION=4.2.2 \
-          -t openapi-generator-cli-custom \
-          -f ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator/Dockerfile \
-          ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
+      - name: Generate SDK
+        if: env.GITHUB_DOTNET_SDK_REPO
+        run: generator/.github/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION dotnet CustomCSharpNetCoreClientCodegen
 
-      - name: Generate new SDK using Open API Generator Custom Docker image
-        run: |
-          docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          openapi-generator-cli-custom generate \
-          --generator-name CustomCSharpNetCoreClientCodegen \
-          --input-spec /generator/openapi-schema.json \
-          --output /generator/languages/dotnet/sdk \
-          --config /generator/languages/dotnet/openapi-generator-config.json \
-          --template-dir /generator/languages/dotnet/templates \
-          --skip-validate-spec
-
-      # - name: Build new SDK
-      #   run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/languages/dotnet/sdk:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
-      
-      - name: Raise pull request
-        run: |
-          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/languages/dotnet/openapi-generator-config.json | cut -c20-24)
-          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          
-          cd analyticsapi-engines-dotnet-sdk
-
-          git config user.email "${{ secrets.USER_EMAIL }}"
-          git config user.name "${{ secrets.USER }}"
-          
-          branch_name="feat/sdk/generator-pr-$pr_number"
-          remote_branch_check=$(git ls-remote --heads origin $branch_name)
-
-          if [ -z "$remote_branch_check" ]
-          then
-            echo "new branch"
-            git checkout -b $branch_name
-            rm -r Engines
-            cp -r ../analyticsapi-engines-sdk-generator/languages/dotnet/sdk Engines
-            git status
-            git add -A .
-            git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
-            echo "Committed all the changes"
-            
-            git push origin $branch_name
-            echo "Pushed all the changes to remote location"
-            
-            export GITHUB_USER=${{ secrets.USER }}
-            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
-          else
-            echo "branch exists"
-            git checkout $branch_name
-            git pull
-            rm -r Engines
-            cp -r ../analyticsapi-engines-sdk-generator/languages/dotnet/sdk Engines
-            git status
-            if git diff-index --quiet HEAD -- 
-            then 
-              echo "No changes to commit." 
-            else 
-              git add -A .
-              git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
-              echo "Committed all the changes"
-            
-              git push origin $branch_name
-              echo "Pushed all the changes to remote location"
-            fi
-          fi         
+      - name: Raise pull request on SDK repository
+        if: env.GITHUB_DOTNET_SDK_REPO
+        run: generator/.github/scripts/raise-pull-request.sh dotnet $GITHUB_DOTNET_SDK_FOLDER
   
   python:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Hub
-        run: sudo snap install hub --classic
-    
-      - name: Check out Analytics API python SDK
+      - name: Check out SDK repository
+        if: env.GITHUB_PYTHON_SDK_REPO
         uses: actions/checkout@v2
         with:
-          repository: afernandes85/analyticsapi-engines-python-sdk
-          path: analyticsapi-engines-python-sdk
+          repository: ${{ env.GITHUB_PYTHON_SDK_REPO }}
+          path: sdk
           fetch-depth: 0
-          token: ${{ secrets.USER_API_KEY }}
+          token: ${{ env.USER_API_KEY }}
 
-      - name: Check out Analytics API SDK Generator
+      - name: Check out Generator repository
+        if: env.GITHUB_PYTHON_SDK_REPO
         uses: actions/checkout@v2
         with:
-          repository: afernandes85/analyticsapi-engines-sdk-generator
-          path: analyticsapi-engines-sdk-generator
-          fetch-depth: 0
+          path: generator
 
-      - name: Build the Docker image
-        run: |
-          docker build --build-arg VERSION=4.2.2 \
-          -t openapi-generator-cli-custom \
-          -f ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator/Dockerfile \
-          ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator/openapi-generator
-
-      - name: Generate new SDK using Open API Generator Custom Docker image
-        run: |
-          docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-sdk-generator:/generator \
-          openapi-generator-cli-custom generate \
-          --generator-name CustomPythonClientCodegen \
-          --input-spec /generator/openapi-schema.json \
-          --output /generator/languages/python/sdk \
-          --config /generator/languages/python/openapi-generator-config.json \
-          --template-dir /generator/languages/python/templates \
-          --skip-validate-spec
-
-      # - name: Build new SDK
-      #   run: docker run --rm -v ${GITHUB_WORKSPACE}/analyticsapi-engines-python-sdk/Engines:/app -w /app mcr.microsoft.com/dotnet/core/sdk:2.2 dotnet build -c release
+      - name: Generate SDK
+        if: env.GITHUB_PYTHON_SDK_REPO
+        run: generator/.github/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION python CustomPythonClientCodegen
       
-      - name: Raise pull request
-        run: |
-          version=$(grep -Po '"packageVersion":.*?[^\\]",' analyticsapi-engines-sdk-generator/languages/python/openapi-generator-config.json | cut -c20-24)
-          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          
-          cd analyticsapi-engines-python-sdk
-          
-          git config user.email "${{ secrets.USER_EMAIL }}"
-          git config user.name "${{ secrets.USER }}"
+      - name: Raise pull request on SDK repository
+        if: env.GITHUB_PYTHON_SDK_REPO
+        run: generator/.github/scripts/raise-pull-request.sh python $GITHUB_PYTHON_SDK_FOLDER
 
-          branch_name="feat/sdk/generator-pr-$pr_number"
-          remote_branch_check=$(git ls-remote --heads origin $branch_name)
+  java:
+    runs-on: ubuntu-latest
 
-          if [ -z "$remote_branch_check" ]
-          then
-            echo "new branch"
-            git checkout -b $branch_name
-            rm -r fds.analyticsapi.engines
-            cp -r ../analyticsapi-engines-sdk-generator/languages/python/sdk fds.analyticsapi.engines
-            git status
-            git add -A .
-            git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
-            echo "Committed all the changes"
-            
-            git push origin $branch_name
-            echo "Pushed all the changes to remote location"
-            
-            export GITHUB_USER=${{ secrets.USER }}
-            export GITHUB_TOKEN=${{ secrets.USER_API_KEY }}
-            hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
-          else
-            echo "branch exists"
-            git checkout $branch_name
-            git pull
-            rm -r fds.analyticsapi.engines
-            cp -r ../analyticsapi-engines-sdk-generator/languages/python/sdk fds.analyticsapi.engines 
-            git status
-            if git diff-index --quiet HEAD -- 
-            then 
-              echo "No changes to commit." 
-            else
-              git add -A .
-              git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
-              echo "Committed all the changes"
-              
-              git push origin $branch_name
-              echo "Pushed all the changes to remote location"
-            fi
-          fi
+    steps:
+      - name: Check out SDK repository
+        if: env.GITHUB_JAVA_SDK_REPO
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.GITHUB_JAVA_SDK_REPO }}
+          path: sdk
+          fetch-depth: 0
+          token: ${{ env.USER_API_KEY }}
 
+      - name: Check out Generator repository
+        if: env.GITHUB_JAVA_SDK_REPO
+        uses: actions/checkout@v2
+        with:
+          path: generator
+
+      - name: Generate SDK
+        if: env.GITHUB_JAVA_SDK_REPO
+        run: generator/.github/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION java CustomJavaClientCodegen
+      
+      - name: Raise pull request on SDK repository
+        if: env.GITHUB_JAVA_SDK_REPO
+        run: generator/.github/scripts/raise-pull-request.sh java $GITHUB_JAVA_SDK_FOLDER
