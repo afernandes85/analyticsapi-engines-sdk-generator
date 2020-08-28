@@ -55,16 +55,16 @@ There are different scenarios that might require changes to this repository. Fol
         ./openapi-generator
     ```
 
-2. Run the Docker image to generate SDK. The `languages/*/sdk` directory will contain the generated files.
+2. Run the Docker image to generate SDK. The `languages/*/sdk` directory will contain the generated files. In the below script, replace the {generator-name} with 
 
     ```bash
     docker run --rm -v ${PWD}:/generator \
         openapi-generator-cli-custom generate \
-        --generator-name python \
+        --generator-name {generator-name} \
         --input-spec /generator/openapi-schema.json \
-        --output /generator/languages/python/sdk \
-        --config /generator/languages/python/openapi-generator-config.json \
-        --template-dir /generator/languages/python/templates \
+        --output /generator/languages/{directory-name}/sdk \
+        --config /generator/languages/{directory-name}/openapi-generator-config.json \
+        --template-dir /generator/languages/{directory-name}/templates \
         --skip-validate-spec
     ```
 
