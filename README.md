@@ -48,20 +48,24 @@ There are different scenarios that might require changes to this repository. Fol
 
 1. Build the Docker image
 
-```bash
-    docker build --build-arg VERSION=$version \
+    ```bash
+    docker build --build-arg VERSION=4.2.2 \
         -t openapi-generator-cli-custom \
-        -f ${GITHUB_WORKSPACE}/generator/openapi-generator/Dockerfile \
-        ${GITHUB_WORKSPACE}/generator/openapi-generator
-```
+        -f ./openapi-generator/Dockerfile \
+        ./openapi-generator
+    ```
 
-2. Run the Docker image to generate the SDK:
+2. Run the Docker image to generate SDK. The `languages/*/sdk` directory will contain the generated files.
 
-    docker run --rm -v ${GITHUB_WORKSPACE}/generator:/generator \
+    ```bash
+    docker run --rm -v ${PWD}:/generator \
         openapi-generator-cli-custom generate \
-        --generator-name $generatorname \
+        --generator-name python \
         --input-spec /generator/openapi-schema.json \
-        --output /generator/languages/$language/sdk \
-        --config /generator/languages/$language/openapi-generator-config.json \
-        --template-dir /generator/languages/$language/templates \
+        --output /generator/languages/python/sdk \
+        --config /generator/languages/python/openapi-generator-config.json \
+        --template-dir /generator/languages/python/templates \
         --skip-validate-spec
+    ```
+
+**IMPORTANT NOTE:** The generated SDKs at `languages/*/sdk` are for local testing purposes and should not be checked into this respository. The gitignore file is configured to ignore these directories.
