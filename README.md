@@ -68,4 +68,4 @@ There are different scenarios that might require changes to this repository. Fol
         --skip-validate-spec
     ```
 
-**IMPORTANT NOTE:** The generated SDKs at `languages/*/sdk` are for local testing purposes and should not be checked into this respository. The gitignore file is configured to ignore these directories.
+**IMPORTANT NOTE:** The gitignore file is configured to ignore the `languages/*/sdk` directories. These are only for local testing purposes and should not be checked in.
