@@ -1,6 +1,6 @@
 # Generator for Analytics API Engines SDKs
 
-## Overview
+## Introduction
 
 This repository contains all the configurations and customizations required to generate API client libraries (SDKs) for FactSet's Analytics API Engines product. It replies on the API's [OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification) document and uses the [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) tool for SDK generation.
 
@@ -15,6 +15,10 @@ Follow the below links for generated language specific SDK repositories.
 * **[OpenAPI Specification](openapi-schema.json)** - The OpenAPI Specification document of the API
 * **[Custom OpenAPI Generator](openapi-generator)** - Dockerized wrapper over OpenAPI Generator to support customizations
 * **[Languages](languages)** - Directory containing OpenAPI Generator configurations `openapi-generator-config.json` and mustache template files `templates\*.mustache` to override default settings for individual languages
+
+## Overview of the SDK generation process
+
+![API SDK Automation Process Overview](./images/overview.png)
 
 ## How to Contribute
 
