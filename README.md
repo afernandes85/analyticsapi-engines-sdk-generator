@@ -36,20 +36,20 @@ There are different scenarios that might require changes to this repository. Fol
 
 ### To configure a new language
 
-1. Check if OpenAPI Generator supports the language - [Supported client generator](https://openapi-generator.tech/docs/generators#client-generators).
+1. Check if OpenAPI Generator supports the language - [supported client generator](https://openapi-generator.tech/docs/generators#client-generators).
 2. If the language is supported, note the generator name for it. We'll call it `<<generator-name>>`.
 3. Clone this repository and create a branch.
 4. Add a new directory `languages/<<language-name>>`.
 5. Create a configuration file `languages/<<language-name>>/openapi-generator-config.json`.
 6. Add a directory `languages/<<language-name>>/templates`.
 7. (Optional) Add custom templates for your generator. Check [OpenAPI Generator Templates](https://openapi-generator.tech/docs/templating) for more information.
-8. (Optional) For most cases, modification to existing mustache template files will suffice but this repository adds a layer of [customization](https://openapi-generator.tech/docs/customization) and introduces custom generators (listed below). These allow you to add custom template files that are not supported by the default OpenAPI generator. For example, in this project the Utility API files `languages/*/utility_api.mustache` and `languages/*/utility_api_doc.mustache` (documentation) are added to each SDK and exposes helpful method that clients can leverage. Similar custom generators can be included in `openapi-generator/codegen/` directory or existing can be modified based on requirement.
+8. (Optional) For most cases, modification to existing mustache template files will suffice but this repository adds a layer of [customization](https://openapi-generator.tech/docs/customization) and introduces custom generators (listed below). These allow you to add custom template files that are not supported by the default OpenAPI generator. For example, in this project the Utility API files `languages/*/utility_api.mustache` and `languages/*/utility_api_doc.mustache` (documentation) are added to each SDK and exposes helpful methods that users can leverage. Similar custom generators can be included in `openapi-generator/codegen/` directory or existing ones can be modified based on requirement.
 
     * CustomCSharpNetCoreClientCodegen
     * CustomPythonClientCodegen
 
-9. Create the language SDK repository.
-10. Modify the [GitHub Workflow](.github/workflows/pull-request.yml) file to include a new job as shown below with the new language configurations.
+9. Create the corresponding language SDK repository.
+10. Add a new job to the [GitHub Workflow](.github/workflows/pull-request.yml) file as shown below to make the new language SDK generation part of the automated process.
 
 ```yml
 ...
