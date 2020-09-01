@@ -19,6 +19,7 @@ Follow the below links for generated language specific SDK repositories.
 ## Overview of the SDK generation process
 
 ![API SDK Automation Process Overview](./images/overview.png)
+**Note:** The steps highlighted in green are all automated using [GitHub Action Worflows](https://docs.github.com/en/actions/configuring-and-managing-workflows).
 
 ## How to Contribute
 
@@ -119,4 +120,4 @@ jobs:
         --skip-validate-spec
     ```
 
-**IMPORTANT NOTE:** The gitignore file is configured to ignore the `languages/*/sdk` directories. These are only for local testing purposes and should not be checked in.
+**Important Note:** The gitignore file is configured to ignore the `languages/*/sdk` directories. These are only for local testing purposes and should not be checked in.
