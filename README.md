@@ -32,13 +32,13 @@ Follow the below links for generated language specific SDK repositories.
   * Raise a pull request with all above mentioned changes. This step will trigger a [GitHub Workflow](.github/workflows/pull-request.yml) that'll generate the SDKs and raise pull requests in each individual SDK repositories.
 
 * **Validation**
-  * Review the SDK pull requests and make changes as needed. Do not manually edit the auto-generated SDK code. Modifications should only be made in the pull request created in step 4 and workflow will automatically apply them to the corresponding SDK pull requests. Follow these steps until the SDK looks good.
-  * Creation of the pull requests automatically kicks off another GitHub workflow that builds the SDK, run tests and performs other sanity checks.
+  * Review the SDK pull requests and make changes as needed. Do not manually edit the auto-generated SDK code. Modifications should only be made in the pull request created in this repository and workflow will automatically apply them to the corresponding SDK pull requests. Follow these steps until the SDK looks good.
+  * Creation of the pull requests in SDK repositories will automatically kicks off another GitHub workflow that builds the SDK, run tests and performs other sanity checks.
   * Update the tests and examples projects in the SDK repositories to match the latest SDK version.
-  * Merge the pull requests to master branch in the Generator as well as SDK repositories.
+  * If everything looks good, merge the pull requests to master branch in all repositories (Generator as well as all SDK repositories).
 
 * **Release**
-  * Create a release in the SDK repositories once the SDKs are ready to be published. This will trigger another GitHub workflow that's package up the SDKs and publish them to the public package managers.
+  * Create a release in the SDK repositories once the SDKs are ready to be published. This will trigger another GitHub workflow that'll package up the SDKs and publish them to the public package managers.
 
 ## Steps to add support for new language
 
