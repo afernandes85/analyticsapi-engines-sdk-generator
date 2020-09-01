@@ -16,40 +16,44 @@ Follow the below links for generated language specific SDK repositories.
 * **[Custom OpenAPI Generator](openapi-generator)** - Dockerized wrapper over OpenAPI Generator to support customizations
 * **[Languages](languages)** - Directory containing OpenAPI Generator configurations `openapi-generator-config.json` and mustache template files `templates\*.mustache` to override default settings for individual languages
 
-## Overview of the SDK generation process
+## Steps to generate new version of the SDKs
+
+### Overview
 
 ![API SDK Automation Process Overview](./images/overview.png)
 **Note:** The steps highlighted in green are all automated using [GitHub Action Worflows](https://docs.github.com/en/actions/configuring-and-managing-workflows).
 
-## How to Contribute
+### Steps
 
-There are different scenarios that might require changes to this repository. Follow the steps outlined in the below sections based on your requirement.
+* **Generation**
+  * Clone this repository and create a branch.
+  * Replace `openapi-schema.json` with the latest version of API's OpenAPI Specification document.
+  * Update the package versions in `languages/*/openapi-generator-config.json` files. Modify the rest of the configurations and template files as needed.
+  * Raise a pull request with all above mentioned changes. This step will trigger a [GitHub Workflow](.github/workflows/pull-request.yml) that'll generate the SDKs and raise pull requests in each individual SDK repositories.
 
-### To generate new version of the SDKs
+* **Validation**
+  * Review the SDK pull requests and make changes as needed. Do not manually edit the auto-generated SDK code. Modifications should only be made in the pull request created in step 4 and workflow will automatically apply them to the corresponding SDK pull requests. Follow these steps until the SDK looks good.
+  * Creation of the pull requests automatically kicks off another GitHub workflow that builds the SDK, run tests and performs other sanity checks.
+  * Update the tests and examples projects in the SDK repositories to match the latest SDK version.
+  * Merge the pull requests to master branch in the Generator as well as SDK repositories.
 
-1. Clone this repository and create a branch.
-2. Replace `openapi-schema.json` with the latest version of API's OpenAPI Specification document.
-3. Update the package versions in `languages/*/openapi-generator-config.json` files. Modify the rest of the configurations and template files as needed.
-4. Raise a pull request with all above mentioned changes. This step will trigger a [GitHub Workflow](.github/workflows/pull-request.yml) that'll generate the SDKs and raise pull requests in each individual SDK repositories.
-5. Review the SDK pull requests and make changes as needed. Do not manually edit the auto-generated SDK code. Modifications should only be made in the pull request created in step 4 and workflow will automatically apply them to the corresponding SDK pull requests. Follow these steps until the SDK looks good.
-6. Update the tests and examples projects in the SDK repositories to match the latest SDK version.
+* **Release**
+  * Create a release in the SDK repositories once the SDKs are ready to be published. This will trigger another GitHub workflow that's package up the SDKs and publish them to the public package managers.
 
-### To configure a new language
+## Steps to add support for new language
 
-1. Check if OpenAPI Generator supports the language - [supported client generator](https://openapi-generator.tech/docs/generators#client-generators).
-2. If the language is supported, note the generator name for it. We'll call it `<<generator-name>>`.
-3. Clone this repository and create a branch.
-4. Add a new directory `languages/<<language-name>>`.
-5. Create a configuration file `languages/<<language-name>>/openapi-generator-config.json`.
-6. Add a directory `languages/<<language-name>>/templates`.
-7. (Optional) Add custom templates for your generator. Check [OpenAPI Generator Templates](https://openapi-generator.tech/docs/templating) for more information.
-8. (Optional) For most cases, modification to existing mustache template files will suffice but this repository adds a layer of [customization](https://openapi-generator.tech/docs/customization) and introduces custom generators (listed below). These allow you to add custom template files that are not supported by the default OpenAPI generator. For example, in this project the Utility API files `languages/*/utility_api.mustache` and `languages/*/utility_api_doc.mustache` (documentation) are added to each SDK and exposes helpful methods that users can leverage. Similar custom generators can be included in `openapi-generator/codegen/` directory or existing ones can be modified based on requirement.
-
-    * CustomCSharpNetCoreClientCodegen
-    * CustomPythonClientCodegen
-
-9. Create the corresponding language SDK repository.
-10. Add a new job to the [GitHub Workflow](.github/workflows/pull-request.yml) file as shown below to make the new language SDK generation part of the automated process.
+* Check if OpenAPI Generator supports the language - [supported client generator](https://openapi-generator.tech/docs/generators#client-generators).
+* If the language is supported, note the generator name for it. We'll call it `<<generator-name>>`.
+* Clone this repository and create a branch.
+* Add a new directory `languages/<<language-name>>`.
+* Create a configuration file `languages/<<language-name>>/openapi-generator-config.json`.
+* Add a directory `languages/<<language-name>>/templates`.
+* (Optional) Add custom templates for your generator. Check [OpenAPI Generator Templates](https://openapi-generator.tech/docs/templating) for more information.
+* (Optional) For most cases, modification to existing mustache template files will suffice but this repository adds a layer of [customization](https://openapi-generator.tech/docs/customization) and introduces custom generators (listed below). These allow you to add custom template files that are not supported by the default OpenAPI generator. For example, in this project the Utility API files `languages/*/utility_api.mustache` and `languages/*/utility_api_doc.mustache` (documentation) are added to each SDK and exposes helpful methods that users can leverage. Similar custom generators can be included in `openapi-generator/codegen/` directory or existing ones can be modified based on requirement.
+  * CustomCSharpNetCoreClientCodegen
+  * CustomPythonClientCodegen
+* Create the corresponding language SDK repository.
+* Add a new job to the [GitHub Workflow](.github/workflows/pull-request.yml) file as shown below to make the new language SDK generation part of the automated process.
 
 ```yml
 ...
@@ -90,7 +94,7 @@ jobs:
             run: generator/.github/scripts/raise-pull-request.sh <<language-name>> $GITHUB_<<language-name>>_SDK_FOLDER
 ```
 
-## Local SDK generation for testing purposes
+## Steps to generate SDKs locally for testing purposes
 
 ### Prerequisites
 
