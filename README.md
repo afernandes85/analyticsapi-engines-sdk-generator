@@ -8,8 +8,8 @@ This repository contains all the configurations and customizations required to g
 
 Follow the below links for generated language specific SDK repositories.
 
-* [Python](https://github.com/afernandes/analyticsapi-engines-python-sdk)
-* [Dotnet](https://github.com/afernandes/analyticsapi-engines-dotnet-sdk)
+* [Python](https://github.com/afernandes85/analyticsapi-engines-python-sdk)
+* [Dotnet](https://github.com/afernandes85/analyticsapi-engines-dotnet-sdk)
 * Java (WIP)
 
 ## Contents
