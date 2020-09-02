@@ -1,6 +1,8 @@
-# Generator for Analytics API Engines SDKs
+<img alt="FactSet" src="https://www.factset.com/hubfs/Assets/images/factset-logo.svg" height="56" width="290">
 
-## Introduction
+# Analytics API Engines SDK Generator
+
+[![Apache-2 license](https://img.shields.io/badge/license-Apache2-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 This repository contains all the configurations and customizations required to generate API client libraries (SDKs) for FactSet's Analytics API Engines product. It replies on the API's [OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification) document and uses the [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) tool for SDK generation.
 
@@ -16,14 +18,12 @@ Follow the below links for generated language specific SDK repositories.
 * **[Custom OpenAPI Generator](openapi-generator)** - Dockerized wrapper over OpenAPI Generator to support customizations
 * **[Languages](languages)** - Directory containing OpenAPI Generator configurations `openapi-generator-config.json` and mustache template files `templates\*.mustache` to override default settings for individual languages
 
-## Steps to generate new version of the SDKs
+## Contributing
 
-### Overview
+### Generate new version of the SDKs
 
 ![API SDK Automation Process Overview](./images/overview.png)
 **Note:** The steps highlighted in green are all automated using [GitHub Action Worflows](https://docs.github.com/en/actions/configuring-and-managing-workflows).
-
-### Steps
 
 * **Generation**
   * Clone this repository and create a branch.
@@ -40,7 +40,7 @@ Follow the below links for generated language specific SDK repositories.
 * **Release**
   * Create a release in the SDK repositories once the SDKs are ready to be published. This will trigger another GitHub workflow that'll package up the SDKs and publish them to the public package managers.
 
-## Steps to add support for new language
+### Configure new language
 
 * Check if OpenAPI Generator supports the language - [supported client generator](https://openapi-generator.tech/docs/generators#client-generators).
 * If the language is supported, note the generator name for it. We'll call it `<<generator-name>>`.
@@ -94,7 +94,7 @@ jobs:
             run: generator/.github/scripts/raise-pull-request.sh <<language-name>> $GITHUB_<<language-name>>_SDK_FOLDER
 ```
 
-## Steps to generate SDKs locally for testing purposes
+## Generation of SDKs locally
 
 ### Prerequisites
 
@@ -124,4 +124,4 @@ jobs:
         --skip-validate-spec
     ```
 
-**Important Note:** The gitignore file is configured to ignore the `languages/*/sdk` directories. These are only for local testing purposes and should not be checked in.
+**Note:** The gitignore file is configured to ignore the `languages/*/sdk` directories. These are only for local testing purposes and should not be checked in.
