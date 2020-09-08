@@ -7,15 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class CustomPythonClientCodegen extends PythonClientCodegen {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PythonClientCodegen.class);
-
+public class CustomJavaClientCodegen extends JavaClientCodegen {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaClientCodegen.class);
+    
     @Override
     public void processOpts() {
         super.processOpts();
 
-        String apiPackageDir = packagePath() + File.separatorChar + "api";
-
+        final String apiFolder = (sourceFolder + '/' + apiPackage).replace(".", "/");
+        final String invokerFolder = (sourceFolder + '/' + invokerPackage).replace(".", "/");
+        
         File folder = new File(templateDir);
         File[] files = folder.listFiles();
         if (files != null) {
@@ -28,11 +29,11 @@ public class CustomPythonClientCodegen extends PythonClientCodegen {
                     String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf("_doc.mustache"))) + ".md";
                     supportingFiles.add(new SupportingFile(file.getName(), apiDocPath, outFilename));
                 } else if (file.getName().endsWith("_api.mustache")) {
-                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".py";
-                    supportingFiles.add(new SupportingFile(file.getName(), apiPackageDir, outFilename));
+                    String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf(".mustache"))) + ".java";
+                    supportingFiles.add(new SupportingFile(file.getName(), apiFolder, outFilename));
                 } else {
-                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".py";
-                    supportingFiles.add(new SupportingFile(file.getName(), packagePath(), outFilename));
+                    String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf(".mustache"))) + ".java";
+                    supportingFiles.add(new SupportingFile(file.getName(), invokerFolder, outFilename));
                 }
             }
         }

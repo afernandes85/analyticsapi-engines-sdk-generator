@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Engines API",
-    "description": "Allow clients to fetch Engines Analytics through APIs.",
+    "description": "Allow clients to fetch Analytics through APIs.",
     "contact": {
       "name": "Analytics API Support",
       "url": "https://developer.factset.com/contact",
@@ -11845,7 +11845,7 @@
           },
           "holdingsmode": {
             "type": "string",
-            "description": "Holdings Mode can be B&H, TBR or OMS."
+            "description": "Holdings Mode can be B&H, TBR, OMS or EXT."
           }
         }
       },
@@ -11970,6 +11970,10 @@
           "result": {
             "type": "string",
             "description": "The result URL of the calculation."
+          },
+          "progress": {
+            "type": "string",
+            "description": "The progress of the calculation unit."
           }
         }
       },
@@ -12342,7 +12346,7 @@
   },
   "security": [
     {
-      "Basic": []
+      "Basic": [ ]
     }
   ]
 }
