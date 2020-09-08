@@ -23,5 +23,6 @@
     "hideGenerationTimestamp": true,
     "caseInsensitiveResponseHeaders": true,
     "library": "jersey2",
-    "servers":  false
+    "servers":  false,
+    "httpUserAgent": "engines-api/4.0.0/java"
 }
