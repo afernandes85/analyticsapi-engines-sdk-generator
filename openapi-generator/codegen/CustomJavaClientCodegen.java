@@ -28,7 +28,7 @@ public class CustomJavaClientCodegen extends JavaClientCodegen {
                 if (file.getName().endsWith("_doc.mustache")) {
                     String outFilename = file.getName().substring(0, file.getName().indexOf("_doc.mustache")) + ".md";
                     supportingFiles.add(new SupportingFile(file.getName(), apiDocPath, outFilename));
-                } else if (file.getName().endsWith("_api.mustache")) {
+                } else if (file.getName().endsWith("Api.mustache")) {
                     String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".java";
                     supportingFiles.add(new SupportingFile(file.getName(), apiFolder, outFilename));
                 } else {
