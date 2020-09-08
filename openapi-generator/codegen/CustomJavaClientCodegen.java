@@ -26,13 +26,13 @@ public class CustomJavaClientCodegen extends JavaClientCodegen {
                 }
                 LOGGER.info("adding custom template file {}", file.getName());
                 if (file.getName().endsWith("_doc.mustache")) {
-                    String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf("_doc.mustache"))) + ".md";
+                    String outFilename = file.getName().substring(0, file.getName().indexOf("_doc.mustache")) + ".md";
                     supportingFiles.add(new SupportingFile(file.getName(), apiDocPath, outFilename));
                 } else if (file.getName().endsWith("_api.mustache")) {
-                    String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf(".mustache"))) + ".java";
+                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".java";
                     supportingFiles.add(new SupportingFile(file.getName(), apiFolder, outFilename));
                 } else {
-                    String outFilename = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, file.getName().substring(0, file.getName().indexOf(".mustache"))) + ".java";
+                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".java";
                     supportingFiles.add(new SupportingFile(file.getName(), invokerFolder, outFilename));
                 }
             }
