@@ -23,6 +23,9 @@ public class CustomPythonClientCodegen extends PythonClientCodegen {
                 if(supportingFiles.stream().filter(f -> f.templateFile.equals(file.getName())).findFirst().isPresent()) {
                     continue;
                 }
+                if(file.getName().equals("common_README.mustache")) {
+                    continue;
+                }
                 LOGGER.info("adding custom template file {}", file.getName());
                 if (file.getName().endsWith("_doc.mustache")) {
                     String outFilename = file.getName().substring(0, file.getName().indexOf("_doc.mustache")) + ".md";
