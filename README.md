@@ -104,8 +104,8 @@ jobs:
 
 1. Build the Docker image
 
-    ```bash
-    docker build --build-arg VERSION=4.2.2 \
+    ```sh
+    docker build --build-arg VERSION=4.3.1 \
         -t openapi-generator-cli-custom \
         -f ./openapi-generator/Dockerfile \
         ./openapi-generator
@@ -113,7 +113,7 @@ jobs:
 
 2. Run the Docker image to generate SDK. The `languages/*/sdk` directory will contain the generated files. In the below script, replace the `<<generator-name>>` with standard OpenAPI generator names or custom ones supported by this repository.
 
-    ```bash
+    ```sh
     docker run --rm -v ${PWD}:/generator \
         openapi-generator-cli-custom generate \
         --generator-name <<generator-name>> \

@@ -7,15 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class CustomPythonClientCodegen extends PythonClientCodegen {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PythonClientCodegen.class);
-
+public class CustomJavaClientCodegen extends JavaClientCodegen {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaClientCodegen.class);
+    
     @Override
     public void processOpts() {
         super.processOpts();
 
-        String apiPackageDir = packagePath() + File.separatorChar + "api";
-
+        final String apiFolder = (sourceFolder + '/' + apiPackage).replace(".", "/");
+        final String invokerFolder = (sourceFolder + '/' + invokerPackage).replace(".", "/");
+        
         File folder = new File(templateDir);
         File[] files = folder.listFiles();
         if (files != null) {
@@ -23,19 +24,16 @@ public class CustomPythonClientCodegen extends PythonClientCodegen {
                 if(supportingFiles.stream().filter(f -> f.templateFile.equals(file.getName())).findFirst().isPresent()) {
                     continue;
                 }
-                if(file.getName().equals("common_README.mustache")) {
-                    continue;
-                }
                 LOGGER.info("adding custom template file {}", file.getName());
                 if (file.getName().endsWith("_doc.mustache")) {
                     String outFilename = file.getName().substring(0, file.getName().indexOf("_doc.mustache")) + ".md";
                     supportingFiles.add(new SupportingFile(file.getName(), apiDocPath, outFilename));
-                } else if (file.getName().endsWith("_api.mustache")) {
-                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".py";
-                    supportingFiles.add(new SupportingFile(file.getName(), apiPackageDir, outFilename));
+                } else if (file.getName().endsWith("Api.mustache")) {
+                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".java";
+                    supportingFiles.add(new SupportingFile(file.getName(), apiFolder, outFilename));
                 } else {
-                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".py";
-                    supportingFiles.add(new SupportingFile(file.getName(), packagePath(), outFilename));
+                    String outFilename = file.getName().substring(0, file.getName().indexOf(".mustache")) + ".java";
+                    supportingFiles.add(new SupportingFile(file.getName(), invokerFolder, outFilename));
                 }
             }
         }
