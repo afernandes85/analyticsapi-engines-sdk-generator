@@ -10,6 +10,13 @@
     <version>{{artifactVersion}}</version>
     <url>{{artifactUrl}}</url>
     <description>{{artifactDescription}}</description>
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Central Repository OSSRH</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
     <scm>
         <connection>{{scmConnection}}</connection>
         <developerConnection>{{scmDeveloperConnection}}</developerConnection>
