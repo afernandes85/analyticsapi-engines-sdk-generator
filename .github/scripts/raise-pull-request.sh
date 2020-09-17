@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 language=$1
-folder=$2
 
 version=$(grep -Po '"packageVersion":.*?[^\\]",' generator/languages/$language/openapi-generator-config.json | cut -c20-24)
 if [ -z "$version" ]
@@ -22,8 +21,8 @@ if [ -z "$remote_branch_check" ]
 then
   echo "new branch"
   git checkout -b $branch_name
-  rm -r $folder
-  cp -r ../generator/languages/$language/sdk $folder
+  rm -r auto-generated-sdk
+  cp -r ../generator/languages/$language/sdk auto-generated-sdk
   git status
   if git diff-index --quiet HEAD -- 
   then 
@@ -44,8 +43,8 @@ else
   echo "branch exists"
   git checkout $branch_name
   git pull
-  rm -r $folder
-  cp -r ../generator/languages/$language/sdk $folder
+  rm -r auto-generated-sdk
+  cp -r ../generator/languages/$language/sdk auto-generated-sdk
   git status
   if git diff-index --quiet HEAD -- 
   then 

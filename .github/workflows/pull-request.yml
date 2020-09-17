@@ -6,12 +6,9 @@ env:
   USER: ${{ secrets.USER }}
   OPENAPI_GENERATOR_VERSION: 4.3.1
   GITHUB_DOTNET_SDK_REPO: afernandes85/analyticsapi-engines-dotnet-sdk
-  GITHUB_DOTNET_SDK_FOLDER: Engines
   GITHUB_PYTHON_SDK_REPO: afernandes85/analyticsapi-engines-python-sdk
-  GITHUB_PYTHON_SDK_FOLDER: fds.analyticsapi.engines
   GITHUB_JAVA_SDK_REPO: afernandes85/analyticsapi-engines-java-sdk
-  GITHUB_JAVA_SDK_FOLDER: Engines
-
+  
 on:
   pull_request:
     branches: [ master ]
@@ -42,7 +39,7 @@ jobs:
 
       - name: Raise pull request on SDK repository
         if: env.GITHUB_DOTNET_SDK_REPO
-        run: generator/.github/scripts/raise-pull-request.sh dotnet $GITHUB_DOTNET_SDK_FOLDER
+        run: generator/.github/scripts/raise-pull-request.sh dotnet
   
   python:
     runs-on: ubuntu-latest
@@ -69,7 +66,7 @@ jobs:
       
       - name: Raise pull request on SDK repository
         if: env.GITHUB_PYTHON_SDK_REPO
-        run: generator/.github/scripts/raise-pull-request.sh python $GITHUB_PYTHON_SDK_FOLDER
+        run: generator/.github/scripts/raise-pull-request.sh python
 
   java:
     runs-on: ubuntu-latest
@@ -96,4 +93,4 @@ jobs:
       
       - name: Raise pull request on SDK repository
         if: env.GITHUB_JAVA_SDK_REPO
-        run: generator/.github/scripts/raise-pull-request.sh java $GITHUB_JAVA_SDK_FOLDER
+        run: generator/.github/scripts/raise-pull-request.sh java
