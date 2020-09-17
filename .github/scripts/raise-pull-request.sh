@@ -5,7 +5,7 @@ language=$1
 version=$(grep -Po '"packageVersion":.*?[^\\]",' generator/languages/$language/openapi-generator-config.json | cut -c20-24)
 if [ -z "$version" ]
 then
-  version=$(grep -Po '"artifactVersion":.*?[^\\]",' generator/languages/$language/openapi-generator-config.json | cut -c20-24)
+  version=$(grep -Po '"artifactVersion":.*?[^\\]",' generator/languages/$language/openapi-generator-config.json | cut -c21-25)
 fi
 pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 
