@@ -60,7 +60,6 @@ Follow the below links for generated language specific SDK repositories.
 ...
 env:
     GITHUB_<<language-name>>_SDK_REPO: <<sdk-repository-location>>
-    GITHUB_<<language-name>>_SDK_FOLDER: <<sdk-folder-name>>
 ...
 ...
 jobs:
@@ -91,7 +90,7 @@ jobs:
 
         - name: Raise pull request on SDK repository
             if: env.GITHUB_<<language-name>>_SDK_REPO
-            run: generator/.github/scripts/raise-pull-request.sh <<language-name>> $GITHUB_<<language-name>>_SDK_FOLDER
+            run: generator/.github/scripts/raise-pull-request.sh <<language-name>>
 ```
 
 ## Generation of SDKs locally
