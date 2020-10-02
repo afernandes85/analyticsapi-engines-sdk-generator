@@ -2,6 +2,8 @@
 
 language=$1
 
+generator_repo_name=$(jq --raw-output .repository.name "$GITHUB_EVENT_PATH")
+
 version=$(grep -Po '"packageVersion":.*?[^\\]",' generator/languages/$language/openapi-generator-config.json | cut -c20-24)
 if [ -z "$version" ]
 then
@@ -14,7 +16,7 @@ cd sdk
 git config user.email $USER_EMAIL
 git config user.name $USER
 
-branch_name="feat/sdk/generator-pr-$pr_number"
+branch_name="feat/sdk/$generator_repo_name-pr-$pr_number"
 remote_branch_check=$(git ls-remote --heads origin $branch_name)
 
 if [ -z "$remote_branch_check" ]
@@ -29,7 +31,7 @@ then
     echo "No changes to commit." 
   else
     git add -A .
-    git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
+    git commit -m "feat(sdk): Auto-commit from $generator_repo_name repository PR $pr_number for SDK version v$version"
     echo "Committed all the changes"
     
     git push origin $branch_name
@@ -37,7 +39,7 @@ then
     
     export GITHUB_USER=$USER
     export GITHUB_TOKEN=$USER_API_KEY
-    hub pull-request -m "feat(sdk): Auto-created by Generator PR $pr_number" -h $branch_name
+    hub pull-request -m "feat(sdk): Auto-created from $generator_repo_name repository PR $pr_number for SDK version v$version" -h $branch_name
   fi
 else
   echo "branch exists"
@@ -51,10 +53,10 @@ else
     echo "No changes to commit." 
   else 
     git add -A .
-    git commit -m "feat(sdk): Auto-commit by Generator PR $pr_number for SDK version v$version"
+    git commit -m "feat(sdk): Auto-commit from $generator_repo_name repository PR $pr_number for SDK version v$version"
     echo "Committed all the changes"
   
     git push origin $branch_name
     echo "Pushed all the changes to remote location"
   fi
-fi         
+fi
