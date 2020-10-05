@@ -130,8 +130,8 @@ jobs:
         continue-on-error: true
         run: |
           cd ${GITHUB_WORKSPACE}/generator/languages/r
-          sudo Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org')"
-          sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')"
+          sudo Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org')" || exit 0
+          sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')" || exit 0
       
       - name: Raise pull request on SDK repository
         if: env.GITHUB_R_SDK_REPO
