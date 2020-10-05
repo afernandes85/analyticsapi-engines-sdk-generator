@@ -119,6 +119,17 @@ jobs:
         if: env.GITHUB_R_SDK_REPO
         run: generator/.github/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION r CustomRClientCodegen
       
+      - name: Set up R
+        if: env.GITHUB_R_SDK_REPO
+        uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: '3.5.3'
+      
+      - name: Generate docs
+        run: |
+          Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org')"
+          Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'Engines')"
+      
       - name: Raise pull request on SDK repository
         if: env.GITHUB_R_SDK_REPO
         run: generator/.github/scripts/raise-pull-request.sh r

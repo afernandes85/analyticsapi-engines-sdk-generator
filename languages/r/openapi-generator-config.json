@@ -7,5 +7,5 @@
 	"gitHost": "github.com",
 	"gitUserId": "factset",
 	"gitRepoId": "analyticsapi-engines-r-sdk",
-	"httpUserAgent": "engines-api/4.0.0/python"
+	"httpUserAgent": "engines-api/4.0.0/r"
 }
