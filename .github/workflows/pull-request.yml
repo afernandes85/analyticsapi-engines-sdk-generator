@@ -126,13 +126,11 @@ jobs:
           r-version: '3.5.3'
       
       - name: Generate docs
+        if: env.GITHUB_R_SDK_REPO
+        continue-on-error: true
         run: |
           cd ${GITHUB_WORKSPACE}/generator/languages/r
           sudo Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org')"
-          sudo Rscript -e "if(!require('jsonlite')) install.packages('jsonlite', repos = 'http://cran.us.r-project.org')"
-          sudo Rscript -e "if(!require('httr')) install.packages('httr', repos = 'http://cran.us.r-project.org')"
-          sudo Rscript -e "if(!require('base64enc')) install.packages('base64enc', repos = 'http://cran.us.r-project.org')"
-          sudo Rscript -e "if(!require('factset.protobuf.stach')) install.packages('factset.protobuf.stach', repos = 'http://cran.us.r-project.org')"
           sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')"
       
       - name: Raise pull request on SDK repository
