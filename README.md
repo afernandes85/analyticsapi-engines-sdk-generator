@@ -11,6 +11,7 @@ Follow the below links for generated language specific SDK repositories.
 * [Python](https://github.com/afernandes85/analyticsapi-engines-python-sdk)
 * [Dotnet](https://github.com/afernandes85/analyticsapi-engines-dotnet-sdk)
 * [Java](https://github.com/afernandes85/analyticsapi-engines-java-sdk)
+* [R](https://github.com/afernandes85/analyticsapi-engines-r-sdk)
 
 ## Contents
 
