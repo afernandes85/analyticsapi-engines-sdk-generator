@@ -127,7 +127,7 @@ jobs:
       
       - name: Generate docs
         run: |
-          cd /generator/languages/r
+          cd ${GITHUB_WORKSPACE}/generator/languages/r
           Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org')"
           Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')"
       
