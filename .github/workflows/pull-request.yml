@@ -129,6 +129,7 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/generator/languages/r
           sudo Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org')"
+          sudo Rscript -e "if(!require('factset.protobuf.stach')) install.packages('factset.protobuf.stach', repos = 'http://cran.us.r-project.org')"
           sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')"
       
       - name: Raise pull request on SDK repository
