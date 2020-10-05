@@ -122,16 +122,16 @@ jobs:
       - name: Set up R
         if: env.GITHUB_R_SDK_REPO
         uses: r-lib/actions/setup-r@v1
-        # with:
-        #   r-version: '3.5.3'
+        with:
+          r-version: '3.5.3'
       
       - name: Generate docs
         if: env.GITHUB_R_SDK_REPO
         continue-on-error: true
         run: |
           cd ${GITHUB_WORKSPACE}/generator/languages/r
-          sudo Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org')" || exit 0
-          sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')" || exit 0
+          sudo Rscript -e "if(!require('roxygen2')) install.packages('roxygen2', repos = 'http://cran.us.r-project.org', dependencies='TRUE')"
+          sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')"
       
       - name: Raise pull request on SDK repository
         if: env.GITHUB_R_SDK_REPO
