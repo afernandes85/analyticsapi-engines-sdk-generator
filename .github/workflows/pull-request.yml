@@ -129,39 +129,43 @@ jobs:
         with:
           r-version: '3.5.3'
       
-      - name: Build and install new SDK
-        run: R CMD build ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+      # - name: Build and install new SDK
+      #   run: R CMD build ${GITHUB_WORKSPACE}/generator/languages/r/sdk
 
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
-        working-directory: ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+      # - name: Query dependencies
+      #   run: |
+      #     install.packages('remotes')
+      #     saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+      #     writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+      #   shell: Rscript {0}
+      #   working-directory: ${GITHUB_WORKSPACE}/generator/languages/r/sdk
 
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+      # - name: Cache R packages
+      #   if: runner.os != 'Windows'
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ env.R_LIBS_USER }}
+      #     key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+      #     restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        run: |
-          cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+      # - name: Install system dependencies
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+      #     while read -r cmd
+      #     do
+      #       eval sudo $cmd
+      #     done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Generate docs
         if: env.GITHUB_R_SDK_REPO
         # continue-on-error: true
         run: |
           cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+          sudo Rscript -e "install.packages('jsonlite', repos = 'http://cran.us.r-project.org')"
+          sudo Rscript -e "install.packages('httr', repos = 'http://cran.us.r-project.org')"
+          sudo Rscript -e "install.packages('base64enc', repos = 'http://cran.us.r-project.org')"
+          sudo Rscript -e "install.packages('factset.protobuf.stach', repos = 'http://cran.us.r-project.org')"
           sudo Rscript -e "install.packages('roxygen2', repos = 'http://cran.us.r-project.org')"
           cd ..
           sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')"
