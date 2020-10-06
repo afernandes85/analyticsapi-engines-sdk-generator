@@ -129,17 +129,17 @@ jobs:
         with:
           r-version: '3.5.3'
       
-      # - name: Build and install new SDK
-      #   run: R CMD build ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+      - name: Build and install new SDK
+        run: R CMD build ${GITHUB_WORKSPACE}/generator/languages/r/sdk
 
-      # - name: Install system dependencies
-      #   if: runner.os == 'Linux'
-      #   run: |
-      #     cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
-      #     while read -r cmd
-      #     do
-      #       eval sudo $cmd
-      #     done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Generate docs
         if: env.GITHUB_R_SDK_REPO
