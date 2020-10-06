@@ -130,7 +130,7 @@ jobs:
         continue-on-error: true
         run: |
           cd ${GITHUB_WORKSPACE}/generator/languages/r
-          sudo Rscript -e "install.packages(c("remotes", "roxygen2"))" -e "remotes::install_deps(dependencies = TRUE)"
+          sudo Rscript -e "install.packages(c('remotes', 'roxygen2'), , repos = 'http://cran.us.r-project.org')" -e "remotes::install_deps(dependencies = TRUE)"
           sudo Rscript -e "roxygen2::roxygenize(roclets = c('rd', 'namespace'), package.dir = 'sdk')"
       
       - name: Raise pull request on SDK repository
