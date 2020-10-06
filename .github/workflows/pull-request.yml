@@ -131,12 +131,11 @@ jobs:
       
       - name: Query dependencies
         run: |
-          install.packages('remotes', repos = 'http://cran.us.r-project.org')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
-        working-directory: ${GITHUB_WORKSPACE}/generator/languages/r/sdk
-
+          cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+          sudo Rscript -e "install.packages('remotes', repos = 'http://cran.us.r-project.org')"
+          sudo Rscript -e "saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)"
+          sudo Rscript -e "writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")"
+        
       - name: Cache R packages
         if: runner.os != 'Windows'
         uses: actions/cache@v2
