@@ -129,21 +129,6 @@ jobs:
         with:
           r-version: '3.5.3'
       
-      - name: Query dependencies
-        run: |
-          cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
-          sudo Rscript -e "install.packages('remotes', repos = 'http://cran.us.r-project.org')"
-          sudo Rscript -e "saveRDS(remotes::dev_package_deps(dependencies = TRUE), '${GITHUB_WORKSPACE}/.github/depends.Rds', version = 2)"
-          sudo Rscript -e "writeLines(sprintf('R-%i.%i', getRversion()$major, getRversion()$minor), '${GITHUB_WORKSPACE}/.github/R-version')"
-        
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
-
       - name: Install system dependencies
         if: runner.os == 'Linux'
         run: |
