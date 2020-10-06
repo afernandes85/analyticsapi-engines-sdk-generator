@@ -99,6 +99,10 @@ jobs:
   r:
     runs-on: ubuntu-latest
 
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+
     steps:
       - name: Check out SDK repository
         if: env.GITHUB_R_SDK_REPO
@@ -127,6 +131,15 @@ jobs:
       
       - name: Build and install new SDK
         run: R CMD build ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Generate docs
         if: env.GITHUB_R_SDK_REPO
