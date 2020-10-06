@@ -163,6 +163,7 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/generator/languages/r/sdk
           sudo apt-get -y install libcurl4-gnutls-dev
+          sudo apt-get -y install libssl-dev
           sudo Rscript -e "install.packages('jsonlite', repos = 'http://cran.us.r-project.org')"
           sudo Rscript -e "install.packages('httr', repos = 'http://cran.us.r-project.org')"
           sudo Rscript -e "install.packages('base64enc', repos = 'http://cran.us.r-project.org')"
